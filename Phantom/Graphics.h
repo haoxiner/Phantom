@@ -15,11 +15,10 @@ private:
   D3D_DRIVER_TYPE driverType_;
   D3D_FEATURE_LEVEL featureLevel_;
   ID3D11Device *d3dDevice_;
-  //ID3D11Device1 *d3dDevice1_;
   ID3D11DeviceContext *immediateContext_;
-  //ID3D11DeviceContext1 *immediateContext1_;
   IDXGISwapChain *swapChain_;
-  //IDXGISwapChain1 *swapChain1_;
   ID3D11RenderTargetView *renderTargetView_;
+  ID3D11DepthStencilView *depthStencilView_;
+  ID3D11Texture2D *depthStencilBuffer_;
 };
 }
