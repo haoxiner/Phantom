@@ -1,5 +1,4 @@
 #include "Application.h"
-#include <Windows.h>
 
 int WINAPI wWinMain(
   HINSTANCE hInstance,

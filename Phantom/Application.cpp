@@ -27,11 +27,10 @@ void phtm::Application::Run()
     {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
-    }
-    if (msg.message == WM_QUIT)
-    {
-      Shutdown();
-      break;
+      if (msg.message == WM_QUIT)
+      {
+        break;
+      }
     }
     graphics_.Update();
   }
@@ -44,6 +43,7 @@ LRESULT phtm::Application::HandleMessage(HWND hWnd, UINT message, WPARAM wParam,
   {
   case WM_KEYDOWN:
   {
+    PostQuitMessage(0);
     //m_Input->KeyDown((unsigned int)wparam);
     return 0;
   }
@@ -55,9 +55,7 @@ LRESULT phtm::Application::HandleMessage(HWND hWnd, UINT message, WPARAM wParam,
   }
   break;
   default:
-  {
     return DefWindowProc(hWnd, message, wParam, lParam);
-  }
   }
 }
 
@@ -67,7 +65,7 @@ bool phtm::Application::Initialize()
   {
     return false;
   }
-  if (!graphics_.Initialize())
+  if (!graphics_.Initialize(hWnd_))
   {
     return false;
   }
@@ -76,6 +74,7 @@ bool phtm::Application::Initialize()
 
 void phtm::Application::Shutdown()
 {
+  graphics_.Shutdown();
 }
 
 static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -86,10 +85,6 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 bool phtm::Application::InitializeWindow()
 {
   WNDCLASSEX wc;
-  DEVMODE dmScreenSettings;
-  int posX = 0;
-  int posY = 0;
-  
   wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
   wc.lpfnWndProc = WindowProc;
   wc.cbClsExtra = 0;
@@ -98,35 +93,32 @@ bool phtm::Application::InitializeWindow()
   wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
   wc.hIconSm = wc.hIcon;
   wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-  wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+  //wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
   wc.lpszMenuName = NULL;
   wc.lpszClassName = applicationName_;
   wc.cbSize = sizeof(WNDCLASSEX);
-
   RegisterClassEx(&wc);
+
   int screenWidth = GetSystemMetrics(SM_CXSCREEN);
   int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
+  DEVMODE dmScreenSettings;
   memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
   dmScreenSettings.dmSize = sizeof(dmScreenSettings);
   dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
   dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
   dmScreenSettings.dmBitsPerPel = 32;
   dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
   // Change the display settings to full screen.
   ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-
+  int posX = 0, posY = 0;
   // Create the window with the screen settings and get the handle to it.
   hWnd_ = CreateWindowEx(WS_EX_APPWINDOW, applicationName_, applicationName_,
     WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
     posX, posY, screenWidth, screenHeight, NULL, NULL, hInstance_, NULL);
-
   // Bring the window up on the screen and set it as main focus.
   ShowWindow(hWnd_, SW_SHOW);
   SetForegroundWindow(hWnd_);
   SetFocus(hWnd_);
-
   // Hide the mouse cursor.
   ShowCursor(false);
   return true;

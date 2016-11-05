@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics.h"
+#include <Windows.h>
 
 namespace phtm
 {

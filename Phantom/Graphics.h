@@ -1,14 +1,25 @@
 #pragma once
-#include <d3d11.h>
+#include <d3d11_1.h>
 
 namespace phtm
 {
 class Graphics
 {
 public:
-  bool Initialize();
+  Graphics();
+  bool Initialize(HWND hWnd);
   void Update();
+  void Shutdown();
 private:
-
+  // directx 11.1/11.0
+  D3D_DRIVER_TYPE driverType_;
+  D3D_FEATURE_LEVEL featureLevel_;
+  ID3D11Device *d3dDevice_;
+  ID3D11Device1 *d3dDevice1_;
+  ID3D11DeviceContext *immediateContext_;
+  ID3D11DeviceContext1 *immediateContext1_;
+  IDXGISwapChain *swapChain_;
+  IDXGISwapChain1 *swapChain1_;
+  ID3D11RenderTargetView *renderTargetView_;
 };
 }
