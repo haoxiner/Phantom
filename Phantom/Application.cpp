@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <sstream>
 
 phtm::Application *phtm::Application::applicationInstance_ = new phtm::Application();
 phtm::Application *application = phtm::Application::GetInstance();
@@ -20,19 +21,54 @@ void phtm::Application::Run()
     Shutdown();
     return;
   }
-  MSG msg;
-  while (true)
+  unsigned long startTick = 0;
+  unsigned long endTick = 0;
+  int frame = 0;
+  float elapsedTime = 0.0f;
+  float deltaTime = 0.0f;// seconds
+  MSG msg = {0};
+  while (msg.message != WM_QUIT)
   {
     if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
     {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
-      if (msg.message == WM_QUIT)
+    }
+    else
+    {
+      startTick = GetTickCount();
+      
+      // perform logic and rendering
+      graphics_.Update();
+
+      endTick = GetTickCount();
+      if (endTick < startTick)
       {
-        break;
+        endTick = startTick;
+      }
+      deltaTime = 0.001f * static_cast<float>(endTick - startTick);
+
+      /*
+      float timeCap = 1.0f / 60.0f;
+      if (deltaTime < timeCap)
+      {
+        Sleep(static_cast<unsigned long>(timeCap*1000 - deltaTime*1000));
+        deltaTime = timeCap;
+      }
+      */
+      frame++;
+      elapsedTime += deltaTime;
+      if (elapsedTime > 1.0f)
+      {
+        float fps = static_cast<float>(frame) / elapsedTime;
+        std::wostringstream oss;
+        oss.precision(6);
+        oss << fps;
+        SetWindowText(hWnd_, oss.str().c_str());
+        frame = 0;
+        elapsedTime = 0.0f;
       }
     }
-    graphics_.Update();
   }
   Shutdown();
 }
@@ -85,6 +121,7 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 bool phtm::Application::InitializeWindow()
 {
   WNDCLASSEX wc;
+  ZeroMemory(&wc, sizeof(wc));
   wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
   wc.lpfnWndProc = WindowProc;
   wc.cbClsExtra = 0;
@@ -93,7 +130,7 @@ bool phtm::Application::InitializeWindow()
   wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
   wc.hIconSm = wc.hIcon;
   wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-  //wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+  wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
   wc.lpszMenuName = NULL;
   wc.lpszClassName = applicationName_;
   wc.cbSize = sizeof(WNDCLASSEX);
@@ -118,7 +155,7 @@ bool phtm::Application::InitializeWindow()
   int posX = 0, posY = 0;
   // Create the window with the screen settings and get the handle to it.
   hWnd_ = CreateWindowEx(WS_EX_APPWINDOW, applicationName_, applicationName_,
-    WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+    WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_OVERLAPPEDWINDOW,
     posX, posY, screenWidth, screenHeight, NULL, NULL, hInstance_, NULL);
   // Bring the window up on the screen and set it as main focus.
   ShowWindow(hWnd_, SW_SHOW);

@@ -3,7 +3,8 @@
 
 phtm::Graphics::Graphics()
   :immediateContext_(nullptr), renderTargetView_(nullptr),
-  swapChain_(nullptr), d3dDevice_(nullptr)
+  swapChain_(nullptr), d3dDevice_(nullptr),
+  depthStencilView_(nullptr), depthStencilBuffer_(nullptr)
 {
 }
 
