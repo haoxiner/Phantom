@@ -101,6 +101,10 @@ bool phtm::Application::InitializeWindow()
 
   int screenWidth = GetSystemMetrics(SM_CXSCREEN);
   int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+  // Full screen mode is implemented in DirectX, this block has been commented.
+  // To Full Screen Mode
+  /*
   DEVMODE dmScreenSettings;
   memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
   dmScreenSettings.dmSize = sizeof(dmScreenSettings);
@@ -108,8 +112,9 @@ bool phtm::Application::InitializeWindow()
   dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
   dmScreenSettings.dmBitsPerPel = 32;
   dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-  // Change the display settings to full screen.
   ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+  */
+
   int posX = 0, posY = 0;
   // Create the window with the screen settings and get the handle to it.
   hWnd_ = CreateWindowEx(WS_EX_APPWINDOW, applicationName_, applicationName_,

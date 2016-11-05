@@ -2,7 +2,8 @@
 #include <directxcolors.h>
 
 phtm::Graphics::Graphics()
-  :immediateContext_(NULL), renderTargetView_(NULL), swapChain_(NULL), d3dDevice_(NULL)
+  :immediateContext_(nullptr), renderTargetView_(nullptr),
+  swapChain_(nullptr), d3dDevice_(nullptr)
 {
 }
 
@@ -22,15 +23,15 @@ bool phtm::Graphics::Initialize(HWND hWnd)
 
   D3D_DRIVER_TYPE driverTypes[] =
   {
-    D3D_DRIVER_TYPE_HARDWARE,
+    D3D_DRIVER_TYPE_HARDWARE/*,
     D3D_DRIVER_TYPE_WARP,
-    D3D_DRIVER_TYPE_REFERENCE,
+    D3D_DRIVER_TYPE_REFERENCE,*/
   };
   UINT numDriverTypes = ARRAYSIZE(driverTypes);
 
   D3D_FEATURE_LEVEL featureLevels[] =
   {
-    D3D_FEATURE_LEVEL_11_1,
+    //D3D_FEATURE_LEVEL_11_1,
     D3D_FEATURE_LEVEL_11_0,
     D3D_FEATURE_LEVEL_10_1,
     D3D_FEATURE_LEVEL_10_0,
@@ -76,58 +77,25 @@ bool phtm::Graphics::Initialize(HWND hWnd)
   if (FAILED(hr))
     return false;
 
-  // Create swap chain
-  IDXGIFactory2* dxgiFactory2 = nullptr;
-  hr = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
-  if (dxgiFactory2)
-  {
-    // DirectX 11.1 or later
-    hr = d3dDevice_->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&d3dDevice1_));
-    if (SUCCEEDED(hr))
-    {
-      (void)immediateContext_->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&immediateContext1_));
-    }
+  // DirectX 11.0 systems
+  DXGI_SWAP_CHAIN_DESC sd;
+  ZeroMemory(&sd, sizeof(sd));
+  sd.BufferCount = 1;
+  sd.BufferDesc.Width = width;
+  sd.BufferDesc.Height = height;
+  sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+  sd.BufferDesc.RefreshRate.Numerator = 60;
+  sd.BufferDesc.RefreshRate.Denominator = 1;
+  sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+  sd.OutputWindow = hWnd;
+  sd.SampleDesc.Count = 1;
+  sd.SampleDesc.Quality = 0;
+  sd.Windowed = FALSE;
 
-    DXGI_SWAP_CHAIN_DESC1 sd;
-    ZeroMemory(&sd, sizeof(sd));
-    sd.Width = width;
-    sd.Height = height;
-    sd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.BufferCount = 1;
+  hr = dxgiFactory->CreateSwapChain(d3dDevice_, &sd, &swapChain_);
 
-    hr = dxgiFactory2->CreateSwapChainForHwnd(d3dDevice_, hWnd, &sd, nullptr, nullptr, &swapChain1_);
-    if (SUCCEEDED(hr))
-    {
-      hr = swapChain1_->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void**>(&swapChain_));
-    }
-
-    dxgiFactory2->Release();
-  }
-  else
-  {
-    // DirectX 11.0 systems
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory(&sd, sizeof(sd));
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = width;
-    sd.BufferDesc.Height = height;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = hWnd;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
-
-    hr = dxgiFactory->CreateSwapChain(d3dDevice_, &sd, &swapChain_);
-  }
-
-  // Note this tutorial doesn't handle full-screen swapchains so we block the ALT+ENTER shortcut
-  dxgiFactory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
+  // block the ALT+ENTER shortcut (switch between full screen and window)
+  //dxgiFactory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
 
   dxgiFactory->Release();
 
@@ -170,7 +138,10 @@ void phtm::Graphics::Shutdown()
 {
   if (immediateContext_) immediateContext_->ClearState();
   if (renderTargetView_) renderTargetView_->Release();
+  //if (swapChain1_) swapChain1_->Release();
   if (swapChain_) swapChain_->Release();
+  //if (immediateContext1_) immediateContext1_->Release();
   if (immediateContext_) immediateContext_->Release();
+  //if (d3dDevice1_) d3dDevice1_->Release();
   if (d3dDevice_) d3dDevice_->Release();
 }
