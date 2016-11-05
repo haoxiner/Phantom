@@ -8,12 +8,12 @@ class Application
 public:
   static Application *GetInstance();
   void Run();
+  LRESULT CALLBACK HandleMessage(HWND, UINT, WPARAM, LPARAM);
 private:
   Application();
   void Shutdown();
   bool Initialize();
   bool InitializeWindow();
-  LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
   static Application *applicationInstance_;
   Graphics graphics_;

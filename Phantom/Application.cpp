@@ -1,15 +1,16 @@
 #include "Application.h"
 
 phtm::Application *phtm::Application::applicationInstance_ = new phtm::Application();
-
-phtm::Application::Application()
-  :hInstance_(GetModuleHandle(NULL)), applicationName_(L"Phantom")
-{
-}
+phtm::Application *application = phtm::Application::GetInstance();
 
 phtm::Application *phtm::Application::GetInstance()
 {
   return applicationInstance_;
+}
+
+phtm::Application::Application()
+  :hInstance_(GetModuleHandle(NULL)), applicationName_(L"Phantom")
+{
 }
 
 void phtm::Application::Run()
@@ -37,6 +38,29 @@ void phtm::Application::Run()
   Shutdown();
 }
 
+LRESULT phtm::Application::HandleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+  switch (message)
+  {
+  case WM_KEYDOWN:
+  {
+    //m_Input->KeyDown((unsigned int)wparam);
+    return 0;
+  }
+  break;
+  case WM_KEYUP:
+  {
+    //m_Input->KeyUp((unsigned int)wparam);
+    return 0;
+  }
+  break;
+  default:
+  {
+    return DefWindowProc(hWnd, message, wParam, lParam);
+  }
+  }
+}
+
 bool phtm::Application::Initialize()
 {
   if (!InitializeWindow())
@@ -50,29 +74,13 @@ bool phtm::Application::Initialize()
   return true;
 }
 
+void phtm::Application::Shutdown()
+{
+}
+
 static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  switch (message)
-  {
-  case WM_KEYDOWN:
-  {
-
-  }
-  break;
-  case WM_CLOSE:
-  {
-    PostQuitMessage(0);
-    return 0;
-  }
-  break;
-  case WM_DESTROY:
-  {
-    PostQuitMessage(0);
-    return 0;
-  }
-  break;
-  }
-  return DefWindowProc(hWnd, message, wParam, lParam);
+  return application->HandleMessage(hWnd, message, wParam, lParam);
 }
 
 bool phtm::Application::InitializeWindow()
@@ -122,13 +130,4 @@ bool phtm::Application::InitializeWindow()
   // Hide the mouse cursor.
   ShowCursor(false);
   return true;
-}
-
-LRESULT phtm::Application::MessageHandler(HWND, UINT, WPARAM, LPARAM)
-{
-  return LRESULT();
-}
-
-void phtm::Application::Shutdown()
-{
 }
