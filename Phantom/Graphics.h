@@ -7,6 +7,7 @@ class Graphics
 {
 public:
   bool Initialize();
+  void Update();
 private:
 
 };

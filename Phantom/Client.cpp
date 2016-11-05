@@ -7,7 +7,7 @@ int WINAPI wWinMain(
   PWSTR pCmdLine,
   int nCmdShow)
 {
-  phtm::Application app;
-  app.Run();
+  phtm::Application *app = phtm::Application::GetInstance();
+  app->Run();
   return 0;
 }

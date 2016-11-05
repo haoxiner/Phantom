@@ -18,9 +18,6 @@
     <ClCompile Include="Client.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Display.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -29,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Display.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>头文件</Filter>
     </ClInclude>

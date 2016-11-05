@@ -1,5 +1,4 @@
 #pragma once
-#include "Display.h"
 #include "Graphics.h"
 
 namespace phtm
@@ -7,14 +6,19 @@ namespace phtm
 class Application
 {
 public:
-  Application();
+  static Application *GetInstance();
   void Run();
 private:
+  Application();
+  void Shutdown();
   bool Initialize();
-  void Close();
+  bool InitializeWindow();
+  LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
-  Display *display_;
-  Graphics *graphics_;
-  bool running_;
+  static Application *applicationInstance_;
+  Graphics graphics_;
+  LPCWSTR applicationName_;
+  HINSTANCE hInstance_;
+  HWND hWnd_;
 };
 }
