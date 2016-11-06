@@ -120,8 +120,7 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 bool phtm::Application::InitializeWindow()
 {
-  WNDCLASSEX wc;
-  ZeroMemory(&wc, sizeof(wc));
+  WNDCLASSEX wc = {0};
   wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
   wc.lpfnWndProc = WindowProc;
   wc.cbClsExtra = 0;

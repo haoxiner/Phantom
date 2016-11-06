@@ -10,7 +10,12 @@ public:
   bool Initialize(HWND hWnd);
   void Update();
   void Shutdown();
+  void SetViewPort(int width, int height);
 private:
+  bool InitializeDevice();
+  bool InitializeSwapChain(HWND hWnd, int width, int height);
+  bool InitializeDepthStencil(int width, int height);
+  bool InitializeRenderTargetView();
   // directx 11.1/11.0
   D3D_DRIVER_TYPE driverType_;
   D3D_FEATURE_LEVEL featureLevel_;
