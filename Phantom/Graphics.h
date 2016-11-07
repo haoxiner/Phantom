@@ -16,7 +16,7 @@ private:
   bool InitializeSwapChain(HWND hWnd, int width, int height);
   bool InitializeDepthStencil(int width, int height);
   bool InitializeRenderTargetView();
-  // directx 11.1/11.0
+  // directx 11.0
   D3D_DRIVER_TYPE driverType_;
   D3D_FEATURE_LEVEL featureLevel_;
   ID3D11Device *d3dDevice_;

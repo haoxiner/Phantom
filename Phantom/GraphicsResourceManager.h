@@ -8,7 +8,7 @@ namespace phtm
 class GraphicsResourceManager
 {
 public:
-  int LoadMesh(std::vector<Vertex> vertices, std::vector<int> indices);
+  //int LoadMesh(std::vector<Vertex> vertices, std::vector<int> indices);
 private:
   std::vector<ID3D11Buffer*> buffers_;
 };

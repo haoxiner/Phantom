@@ -4,13 +4,19 @@
 phtm::Application *phtm::Application::applicationInstance_ = new phtm::Application();
 phtm::Application *application = phtm::Application::GetInstance();
 
+void phtm::Application::SetGame(Game *game)
+{
+  application->game_ = game;
+}
+
 phtm::Application *phtm::Application::GetInstance()
 {
   return applicationInstance_;
 }
 
 phtm::Application::Application()
-  :hInstance_(GetModuleHandle(NULL)), applicationName_(L"Phantom")
+  :hInstance_(GetModuleHandle(NULL)), applicationName_(L"Phantom"),
+  game_(nullptr)
 {
 }
 
@@ -21,6 +27,12 @@ void phtm::Application::Run()
     Shutdown();
     return;
   }
+  if (!game_)
+  {
+    Shutdown();
+    return;
+  }
+  game_->Start();
   unsigned long startTick = 0;
   unsigned long endTick = 0;
   int frame = 0;
@@ -38,6 +50,7 @@ void phtm::Application::Run()
     {
       startTick = GetTickCount();
       
+      game_->Update(deltaTime);
       // perform logic and rendering
       graphics_.Update();
 
@@ -70,6 +83,7 @@ void phtm::Application::Run()
       }
     }
   }
+  game_->End();
   Shutdown();
 }
 

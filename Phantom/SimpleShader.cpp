@@ -1,0 +1,95 @@
+#include "SimpleShader.h"
+#include <d3dcompiler.h>
+
+HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+{
+  HRESULT hr = S_OK;
+
+  DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+  // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+  // Setting this flag improves the shader debugging experience, but still allows 
+  // the shaders to be optimized and to run exactly the way they will run in 
+  // the release configuration of this program.
+  dwShaderFlags |= D3DCOMPILE_DEBUG;
+
+  // Disable optimizations to further improve shader debugging
+  dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+  ID3DBlob* pErrorBlob = nullptr;
+  hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
+    dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+  if (FAILED(hr))
+  {
+    if (pErrorBlob)
+    {
+      OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
+      pErrorBlob->Release();
+    }
+    return hr;
+  }
+  if (pErrorBlob) pErrorBlob->Release();
+
+  return S_OK;
+}
+
+void phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
+{
+  ID3DBlob *vsBlob = nullptr;
+  HRESULT hr = CompileShaderFromFile(
+    L"shader.fx", "VS", "vs_4_0", &vsBlob);
+  if (FAILED(hr))
+  {
+    return;
+  }
+  d3dDevice->CreateVertexShader(
+    vsBlob->GetBufferPointer(),
+    vsBlob->GetBufferSize(),
+    nullptr,
+    &vertexShader_);
+  if (FAILED(hr))
+  {
+    vsBlob->Release();
+    return;
+  }
+  D3D11_INPUT_ELEMENT_DESC layout[] =
+  {
+    {"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+  };
+  int numElements = ARRAYSIZE(layout);
+  hr = d3dDevice->CreateInputLayout(
+    layout, numElements,
+    vsBlob->GetBufferPointer(),
+    vsBlob->GetBufferSize(),
+    &vertexLayout_);
+  vsBlob->Release();
+  if (FAILED(hr))
+    return;
+
+  ID3DBlob *psBlob = nullptr;
+  hr = CompileShaderFromFile(
+    L"shader.fx", "PS", "ps_4_0", &psBlob);
+  if (FAILED(hr))
+  {
+    return;
+  }
+  hr = d3dDevice->CreatePixelShader(
+    psBlob->GetBufferPointer(),
+    psBlob->GetBufferSize(),
+    nullptr,
+    &pixelShader_);
+  psBlob->Release();
+  if (FAILED(hr))
+    return;
+}
+
+void phtm::SimpleShader::Render(ID3D11DeviceContext *context, ID3D11Buffer *vertexBuffer, int stride, int offset)
+{
+  context->IASetVertexBuffers(0, 1, &vertexBuffer, (UINT*)&stride, (UINT*)&offset);
+  context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  context->VSSetShader(vertexShader_, nullptr, 0);
+  context->PSSetShader(pixelShader_, nullptr, 0);
+  context->Draw(3, 0);
+};
+

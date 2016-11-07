@@ -19,6 +19,12 @@
     <Filter Include="头文件\Graphics">
       <UniqueIdentifier>{839da314-485c-430b-a52e-4995b2eb393f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Engine">
+      <UniqueIdentifier>{f2bf80ec-4cea-49c4-a2c3-3370f7d09ecf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Game">
+      <UniqueIdentifier>{59b4958c-ec16-4726-afff-79857b5a57c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -28,6 +34,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PhantomGame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleShader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,6 +64,33 @@
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="PhantomGame.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingSystem.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleShader.h">
+      <Filter>头文件\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

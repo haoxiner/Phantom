@@ -10,12 +10,16 @@ phtm::Graphics::Graphics()
 
 bool phtm::Graphics::Initialize(HWND hWnd)
 {
-  InitializeDevice();
+  bool success = false;
+  success = InitializeDevice();
+  if (!success)
+  {
+    return false;
+  }
   RECT rc;
   GetClientRect(hWnd, &rc);
   int width = rc.right - rc.left;
   int height = rc.bottom - rc.top;
-  bool success = false;
   success = InitializeSwapChain(hWnd, width, height);
   if (!success)
   {
@@ -36,7 +40,7 @@ bool phtm::Graphics::Initialize(HWND hWnd)
 
 void phtm::Graphics::Update()
 {
-  immediateContext_->ClearRenderTargetView(renderTargetView_, DirectX::Colors::AntiqueWhite);
+  //immediateContext_->ClearRenderTargetView(renderTargetView_, DirectX::Colors::AntiqueWhite);
   swapChain_->Present(0, 0);
 }
 
