@@ -1,13 +1,23 @@
 #pragma once
+#include "Application.h"
+#include "Message.h"
+#include "Engine.h"
+#include "RenderingSystem.h"
+
 namespace phtm
 {
-class Game
+class Game : public Application
 {
 public:
-  Game() {}
-  virtual ~Game() = 0;
-  virtual void Start() = 0;
-  virtual void Update(float deltaTimeInSeconds) = 0;
-  virtual void End() = 0;
+  Game();
+  virtual ~Game();
+protected:
+  virtual void StartGame();
+  virtual void UpdateGame(float deltaTimeInSeconds);
+  virtual void EndGame();
+private:
+  Message message_;
+  Engine engine_;
+  RenderingSystem *renderingSystem_;
 };
 }

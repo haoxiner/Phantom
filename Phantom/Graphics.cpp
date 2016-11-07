@@ -1,4 +1,6 @@
 #include "Graphics.h"
+#include "Vertex.h"
+#include <d3dcompiler.h>
 #include <directxcolors.h>
 
 phtm::Graphics::Graphics()
@@ -6,6 +8,38 @@ phtm::Graphics::Graphics()
   swapChain_(nullptr), d3dDevice_(nullptr),
   depthStencilView_(nullptr), depthStencilBuffer_(nullptr)
 {
+}
+static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+{
+  HRESULT hr = S_OK;
+
+  DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+  // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+  // Setting this flag improves the shader debugging experience, but still allows 
+  // the shaders to be optimized and to run exactly the way they will run in 
+  // the release configuration of this program.
+  dwShaderFlags |= D3DCOMPILE_DEBUG;
+
+  // Disable optimizations to further improve shader debugging
+  dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+  ID3DBlob* pErrorBlob = nullptr;
+  hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
+    dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+  if (FAILED(hr))
+  {
+    if (pErrorBlob)
+    {
+      OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
+      pErrorBlob->Release();
+    }
+    return hr;
+  }
+  if (pErrorBlob) pErrorBlob->Release();
+
+  return S_OK;
 }
 
 bool phtm::Graphics::Initialize(HWND hWnd)
@@ -35,12 +69,12 @@ bool phtm::Graphics::Initialize(HWND hWnd)
   {
     return false;
   }
+  SetViewPort(width, height);
   return true;
 }
 
 void phtm::Graphics::Update()
 {
-  //immediateContext_->ClearRenderTargetView(renderTargetView_, DirectX::Colors::AntiqueWhite);
   swapChain_->Present(0, 0);
 }
 
@@ -57,6 +91,22 @@ void phtm::Graphics::Shutdown()
   
   if (immediateContext_) immediateContext_->Release();
   if (d3dDevice_) d3dDevice_->Release();
+}
+
+void phtm::Graphics::ClearScreen()
+{
+  immediateContext_->ClearDepthStencilView(depthStencilView_, D3D11_CLEAR_DEPTH, 1.0, 0);
+  immediateContext_->ClearRenderTargetView(renderTargetView_, DirectX::Colors::MidnightBlue);
+}
+
+ID3D11Device *phtm::Graphics::GetD3DDevice()
+{
+  return d3dDevice_;
+}
+
+ID3D11DeviceContext *phtm::Graphics::GetD3DDeviceContext()
+{
+  return immediateContext_;
 }
 
 void phtm::Graphics::SetViewPort(int width, int height)

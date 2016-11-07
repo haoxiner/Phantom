@@ -1,7 +1,5 @@
 #pragma once
 #include "Graphics.h"
-#include "Engine.h"
-#include "Game.h"
 #include <Windows.h>
 
 namespace phtm
@@ -9,19 +7,20 @@ namespace phtm
 class Application
 {
 public:
-  static void SetGame(Game *game);
-  static Application *GetInstance();
   void Run();
-  LRESULT CALLBACK HandleMessage(HWND, UINT, WPARAM, LPARAM);
-private:
+protected:
   Application();
+  virtual void StartGame() = 0;
+  virtual void UpdateGame(float deltaTimeInSeconds) = 0;
+  virtual void EndGame() = 0;
+protected:
+  Graphics graphics_;
+  bool running_;
+private:
   void Shutdown();
   bool Initialize();
   bool InitializeWindow();
 private:
-  static Application *applicationInstance_;
-  Graphics graphics_;
-  Game *game_;
   LPCWSTR applicationName_;
   HINSTANCE hInstance_;
   HWND hWnd_;

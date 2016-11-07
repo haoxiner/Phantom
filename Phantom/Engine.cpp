@@ -1,5 +1,9 @@
 #include "Engine.h"
 
+void phtm::Engine::Start()
+{
+}
+
 void phtm::Engine::Update(Message &message)
 {
   for (auto entity : entities_)
@@ -15,4 +19,8 @@ void phtm::Engine::Update(Message &message)
 void phtm::Engine::AddSystem(System *system)
 {
   systems_.push_back(system);
+}
+
+void phtm::Engine::Shutdown()
+{
 }

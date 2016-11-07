@@ -10,6 +10,9 @@ public:
   bool Initialize(HWND hWnd);
   void Update();
   void Shutdown();
+  void ClearScreen();
+  ID3D11Device *GetD3DDevice();
+  ID3D11DeviceContext *GetD3DDeviceContext();
   void SetViewPort(int width, int height);
 private:
   bool InitializeDevice();

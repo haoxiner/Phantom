@@ -1,5 +1,4 @@
 #pragma once
-#include "Player.h"
 
 namespace phtm
 {
@@ -10,6 +9,5 @@ public:
   ~Message();
   float deltaTimeInSeconds_;
 private:
-
 };
 }

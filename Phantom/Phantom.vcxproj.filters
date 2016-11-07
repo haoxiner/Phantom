@@ -39,9 +39,6 @@
     <ClCompile Include="Engine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PhantomGame.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="RenderingSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -49,6 +46,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SimpleShader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,9 +83,6 @@
     <ClInclude Include="Game.h">
       <Filter>头文件\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="PhantomGame.h">
-      <Filter>头文件\Game</Filter>
-    </ClInclude>
     <ClInclude Include="RenderingSystem.h">
       <Filter>头文件\Engine</Filter>
     </ClInclude>
@@ -95,6 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shader_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shader_VS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

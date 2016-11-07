@@ -1,22 +1,8 @@
 #include "Application.h"
 #include <sstream>
 
-phtm::Application *phtm::Application::applicationInstance_ = new phtm::Application();
-phtm::Application *application = phtm::Application::GetInstance();
-
-void phtm::Application::SetGame(Game *game)
-{
-  application->game_ = game;
-}
-
-phtm::Application *phtm::Application::GetInstance()
-{
-  return applicationInstance_;
-}
-
 phtm::Application::Application()
-  :hInstance_(GetModuleHandle(NULL)), applicationName_(L"Phantom"),
-  game_(nullptr)
+  :hInstance_(GetModuleHandle(NULL)), applicationName_(L"Phantom"), running_(false)
 {
 }
 
@@ -27,19 +13,14 @@ void phtm::Application::Run()
     Shutdown();
     return;
   }
-  if (!game_)
-  {
-    Shutdown();
-    return;
-  }
-  game_->Start();
+  StartGame();
   unsigned long startTick = 0;
   unsigned long endTick = 0;
   int frame = 0;
   float elapsedTime = 0.0f;
   float deltaTime = 0.0f;// seconds
   MSG msg = {0};
-  while (msg.message != WM_QUIT)
+  while (running_ && msg.message != WM_QUIT)
   {
     if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
     {
@@ -50,9 +31,8 @@ void phtm::Application::Run()
     {
       startTick = GetTickCount();
       
-      game_->Update(deltaTime);
-      // perform logic and rendering
-      graphics_.Update();
+      // do game loop
+      UpdateGame(deltaTime);
 
       endTick = GetTickCount();
       if (endTick < startTick)
@@ -83,30 +63,8 @@ void phtm::Application::Run()
       }
     }
   }
-  game_->End();
+  EndGame();
   Shutdown();
-}
-
-LRESULT phtm::Application::HandleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-  switch (message)
-  {
-  case WM_KEYDOWN:
-  {
-    PostQuitMessage(0);
-    //m_Input->KeyDown((unsigned int)wparam);
-    return 0;
-  }
-  break;
-  case WM_KEYUP:
-  {
-    //m_Input->KeyUp((unsigned int)wparam);
-    return 0;
-  }
-  break;
-  default:
-    return DefWindowProc(hWnd, message, wParam, lParam);
-  }
 }
 
 bool phtm::Application::Initialize()
@@ -129,7 +87,24 @@ void phtm::Application::Shutdown()
 
 static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  return application->HandleMessage(hWnd, message, wParam, lParam);
+  switch (message)
+  {
+  case WM_KEYDOWN:
+  {
+    PostQuitMessage(0);
+    //m_Input->KeyDown((unsigned int)wparam);
+    return 0;
+  }
+  break;
+  case WM_KEYUP:
+  {
+    //m_Input->KeyUp((unsigned int)wparam);
+    return 0;
+  }
+  break;
+  default:
+    return DefWindowProc(hWnd, message, wParam, lParam);
+  }
 }
 
 bool phtm::Application::InitializeWindow()
@@ -166,6 +141,7 @@ bool phtm::Application::InitializeWindow()
   */
 
   int posX = 0, posY = 0;
+
   // Create the window with the screen settings and get the handle to it.
   hWnd_ = CreateWindowEx(WS_EX_APPWINDOW, applicationName_, applicationName_,
     WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_OVERLAPPEDWINDOW,

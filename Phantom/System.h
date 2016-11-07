@@ -7,7 +7,7 @@ class System
 {
 public:
   System() {}
-  virtual ~System() = 0;
+  virtual ~System() {};
   virtual void Update(Message &message) = 0;
 private:
 

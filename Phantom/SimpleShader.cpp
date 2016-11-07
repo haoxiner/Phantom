@@ -1,7 +1,8 @@
 #include "SimpleShader.h"
+#include "Vertex.h"
 #include <d3dcompiler.h>
 
-HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 {
   HRESULT hr = S_OK;
 
@@ -34,14 +35,14 @@ HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szS
   return S_OK;
 }
 
-void phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
+bool phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
 {
   ID3DBlob *vsBlob = nullptr;
   HRESULT hr = CompileShaderFromFile(
     L"shader.fx", "VS", "vs_4_0", &vsBlob);
   if (FAILED(hr))
   {
-    return;
+    return false;
   }
   d3dDevice->CreateVertexShader(
     vsBlob->GetBufferPointer(),
@@ -51,11 +52,11 @@ void phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
   if (FAILED(hr))
   {
     vsBlob->Release();
-    return;
+    return false;
   }
   D3D11_INPUT_ELEMENT_DESC layout[] =
   {
-    {"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+    {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
   };
   int numElements = ARRAYSIZE(layout);
   hr = d3dDevice->CreateInputLayout(
@@ -65,14 +66,14 @@ void phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
     &vertexLayout_);
   vsBlob->Release();
   if (FAILED(hr))
-    return;
+    return false;
 
   ID3DBlob *psBlob = nullptr;
   hr = CompileShaderFromFile(
     L"shader.fx", "PS", "ps_4_0", &psBlob);
   if (FAILED(hr))
   {
-    return;
+    return false;
   }
   hr = d3dDevice->CreatePixelShader(
     psBlob->GetBufferPointer(),
@@ -81,12 +82,17 @@ void phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
     &pixelShader_);
   psBlob->Release();
   if (FAILED(hr))
-    return;
+    return false;
+  return true;
 }
 
 void phtm::SimpleShader::Render(ID3D11DeviceContext *context, ID3D11Buffer *vertexBuffer, int stride, int offset)
 {
-  context->IASetVertexBuffers(0, 1, &vertexBuffer, (UINT*)&stride, (UINT*)&offset);
+  context->IASetInputLayout(vertexLayout_);
+  //context->IASetVertexBuffers(0, 1, &vertexBuffer, (UINT*)&stride, (UINT*)&offset);
+  UINT stride1 = sizeof(Vertex);
+  UINT offset1 = 0;
+  context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride1, &offset1);
   context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   context->VSSetShader(vertexShader_, nullptr, 0);
   context->PSSetShader(pixelShader_, nullptr, 0);

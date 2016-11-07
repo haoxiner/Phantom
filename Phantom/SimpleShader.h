@@ -8,7 +8,7 @@ class SimpleShader
 public:
   SimpleShader() {}
   ~SimpleShader() {}
-  void Initialize(ID3D11Device *d3dDevice);
+  bool Initialize(ID3D11Device *d3dDevice);
   void Render(ID3D11DeviceContext *context, ID3D11Buffer *vertexBuffer, int stride, int offset);
 private:
   ID3D11VertexShader *vertexShader_;
