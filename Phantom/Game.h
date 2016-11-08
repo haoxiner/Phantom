@@ -3,6 +3,7 @@
 #include "Message.h"
 #include "Engine.h"
 #include "RenderingSystem.h"
+#include "ComponentCollection.h"
 
 namespace phtm
 {
@@ -19,5 +20,6 @@ private:
   Message message_;
   Engine engine_;
   RenderingSystem *renderingSystem_;
+  ComponentCollection componentCollection_;
 };
 }

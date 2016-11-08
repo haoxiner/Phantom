@@ -86,16 +86,17 @@ bool phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
   return true;
 }
 
-void phtm::SimpleShader::Render(ID3D11DeviceContext *context, ID3D11Buffer *vertexBuffer, int stride, int offset)
+void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel)
 {
   context->IASetInputLayout(vertexLayout_);
   //context->IASetVertexBuffers(0, 1, &vertexBuffer, (UINT*)&stride, (UINT*)&offset);
   UINT stride1 = sizeof(Vertex);
   UINT offset1 = 0;
-  context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride1, &offset1);
+  context->IASetVertexBuffers(0, 1, &rawModel.vertexBuffer_, &stride1, &offset1);
+  context->IASetIndexBuffer(rawModel.indexBuffer_, DXGI_FORMAT_R32_UINT, 0);
   context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   context->VSSetShader(vertexShader_, nullptr, 0);
   context->PSSetShader(pixelShader_, nullptr, 0);
-  context->Draw(3, 0);
+  context->DrawIndexed(3, 0, 0);
 };
 

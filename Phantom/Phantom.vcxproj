@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="ComponentCollection.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
@@ -166,6 +167,8 @@
     <ClInclude Include="GraphicsResourceManager.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="RawModel.h" />
+    <ClInclude Include="RenderingComponent.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="SimpleShader.h" />
     <ClInclude Include="System.h" />

@@ -2,6 +2,10 @@
 
 void phtm::Engine::Start()
 {
+  for (auto system : systems_)
+  {
+    system->Initialize();
+  }
 }
 
 void phtm::Engine::Update(Message &message)
@@ -23,4 +27,8 @@ void phtm::Engine::AddSystem(System *system)
 
 void phtm::Engine::Shutdown()
 {
+  for (auto system : systems_)
+  {
+    system->CleanUp();
+  }
 }

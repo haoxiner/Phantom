@@ -92,6 +92,15 @@
     <ClInclude Include="SimpleShader.h">
       <Filter>头文件\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="RenderingComponent.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollection.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="RawModel.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx">

@@ -10,11 +10,11 @@ class RenderingSystem : public System
 public:
   RenderingSystem(Graphics *graphics);
   virtual ~RenderingSystem() {}
+  virtual bool Initialize();
   virtual void Update(Message &message);
-  bool Init();
+  virtual void CleanUp();
 private:
   Graphics *graphics_;
   SimpleShader shader_;
-  ID3D11Buffer *buffer_;
 };
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "ComponentCollection.h"
 
 namespace phtm
 {
@@ -8,6 +9,7 @@ public:
   Message();
   ~Message();
   float deltaTimeInSeconds_;
+  ComponentCollection *componentCollection_;
 private:
 };
 }
