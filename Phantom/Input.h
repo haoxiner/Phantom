@@ -7,6 +7,7 @@ class Input
 {
 public:
   Input();
+  bool Quit();
   float LeftHorizontalAxisX();
   float LeftHorizontalAxisY();
   bool Initialize(HINSTANCE hInstance, HWND hWnd);

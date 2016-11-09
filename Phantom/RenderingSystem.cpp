@@ -17,7 +17,7 @@ bool phtm::RenderingSystem::Initialize()
 
 void phtm::RenderingSystem::Update(Message &message)
 {
-  shader_.Render(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_);
+  shader_.Render(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
 }
 
 void phtm::RenderingSystem::CleanUp()

@@ -87,6 +87,7 @@ bool phtm::Application::Initialize()
 
 void phtm::Application::Shutdown()
 {
+  input_.Close();
   graphics_.Shutdown();
 }
 
@@ -121,8 +122,8 @@ bool phtm::Application::InitializeWindow()
   wc.cbSize = sizeof(WNDCLASSEX);
   RegisterClassEx(&wc);
 
-  int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-  int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+  screenWidth_ = GetSystemMetrics(SM_CXSCREEN);
+  screenHeight_ = GetSystemMetrics(SM_CYSCREEN);
 
   // Full screen mode is implemented in DirectX, this block has been commented.
   // To Full Screen Mode
@@ -142,7 +143,7 @@ bool phtm::Application::InitializeWindow()
   // Create the window with the screen settings and get the handle to it.
   hWnd_ = CreateWindowEx(WS_EX_APPWINDOW, applicationName_, applicationName_,
     WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_OVERLAPPEDWINDOW,
-    posX, posY, screenWidth, screenHeight, NULL, NULL, hInstance_, NULL);
+    posX, posY, screenWidth_, screenHeight_, NULL, NULL, hInstance_, NULL);
   // Bring the window up on the screen and set it as main focus.
   ShowWindow(hWnd_, SW_SHOW);
   SetForegroundWindow(hWnd_);

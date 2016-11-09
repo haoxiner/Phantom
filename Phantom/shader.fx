@@ -10,12 +10,19 @@ struct VSOUT
   float3 normal:NORMAL;
   float2 texCoord:TEXCOORD;
 };
+cbuffer cbPerObject
+{
+  float4x4 view;
+  float4x4 projection;
+};
 
 VSOUT VS(
   VSIN vin)
 {
   VSOUT vout;
-  vout.position = float4(vin.position, 1.0);
+  vout.position = mul(float4(vin.position, 1.0), view);
+  vout.position = mul(vout.position, projection);
+  //vout.position = float4(vin.position, 1.0);
   vout.normal = vin.normal;
   vout.texCoord = vin.texCoord;
   return vout;
@@ -23,5 +30,5 @@ VSOUT VS(
 
 float4 PS(VSOUT pin):SV_Target
 {
-  return float4(pin.normal * 0.5 + float3(0.5,0.5,0.5), 1.0);
+  return float4(pin.texCoord, 0.0, 1.0);
 }

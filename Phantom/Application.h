@@ -18,6 +18,8 @@ protected:
   Graphics graphics_;
   Input input_;
   bool running_;
+  int screenWidth_;
+  int screenHeight_;
 private:
   void Shutdown();
   bool Initialize();

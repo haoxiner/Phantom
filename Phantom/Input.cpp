@@ -5,6 +5,11 @@ phtm::Input::Input()
 {
 }
 
+bool phtm::Input::Quit()
+{
+  return keyDown_[DIK_Q];
+}
+
 float phtm::Input::LeftHorizontalAxisX()
 {
   float value = 0.0f;

@@ -53,8 +53,12 @@ void phtm::Game::StartGame()
     return;
   }
 
+  camera_.SetPerspective(
+    25.0f*3.14f,
+    static_cast<float>(screenWidth_)/static_cast<float>(screenHeight_));
   message_.componentCollection_ = &componentCollection_;
   message_.input_ = &input_;
+  message_.camera_ = &camera_;
 
   engine_.AddSystem(renderingSystem_);
   engine_.Start();
@@ -64,6 +68,11 @@ void phtm::Game::StartGame()
 
 void phtm::Game::UpdateGame(float deltaTimeInSeconds)
 {
+  if (input_.Quit())
+  {
+    running_ = false;
+    return;
+  }
   graphics_.ClearScreen();
   message_.deltaTimeInSeconds_ = deltaTimeInSeconds;
   if (input_.LeftHorizontalAxisX() > 0)

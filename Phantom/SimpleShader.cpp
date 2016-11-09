@@ -85,10 +85,19 @@ bool phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
   psBlob->Release();
   if (FAILED(hr))
     return false;
+
+  D3D11_BUFFER_DESC constBufferDesc;
+  ZeroMemory(&constBufferDesc, sizeof(constBufferDesc));
+  constBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+  constBufferDesc.ByteWidth = sizeof(Camera);
+  constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  hr = d3dDevice->CreateBuffer(&constBufferDesc, nullptr, &constBuffer_);
+  if (FAILED(hr))
+    return false;
   return true;
 }
 
-void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel)
+void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel, Camera &camera)
 {
   context->IASetInputLayout(vertexLayout_);
   UINT stride1 = sizeof(Vertex);
@@ -98,6 +107,8 @@ void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel
   context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   context->VSSetShader(vertexShader_, nullptr, 0);
   context->PSSetShader(pixelShader_, nullptr, 0);
+  context->VSSetConstantBuffers(0, 1, &constBuffer_);
+  context->UpdateSubresource(constBuffer_, 0, nullptr, &camera, 0, 0);
   context->DrawIndexed(rawModel.indexCount_, 0, 0);
 };
 
