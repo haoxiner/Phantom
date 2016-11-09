@@ -28,5 +28,7 @@ private:
   ID3D11RenderTargetView *renderTargetView_;
   ID3D11DepthStencilView *depthStencilView_;
   ID3D11Texture2D *depthStencilBuffer_;
+
+  ID3D11RasterizerState *rasterState_;
 };
 }

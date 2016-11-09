@@ -56,7 +56,9 @@ bool phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
   }
   D3D11_INPUT_ELEMENT_DESC layout[] =
   {
-    {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+    {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+    {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+    {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
   };
   int numElements = ARRAYSIZE(layout);
   hr = d3dDevice->CreateInputLayout(
@@ -89,7 +91,6 @@ bool phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
 void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel)
 {
   context->IASetInputLayout(vertexLayout_);
-  //context->IASetVertexBuffers(0, 1, &vertexBuffer, (UINT*)&stride, (UINT*)&offset);
   UINT stride1 = sizeof(Vertex);
   UINT offset1 = 0;
   context->IASetVertexBuffers(0, 1, &rawModel.vertexBuffer_, &stride1, &offset1);
@@ -97,6 +98,6 @@ void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel
   context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   context->VSSetShader(vertexShader_, nullptr, 0);
   context->PSSetShader(pixelShader_, nullptr, 0);
-  context->DrawIndexed(3, 0, 0);
+  context->DrawIndexed(rawModel.indexCount_, 0, 0);
 };
 

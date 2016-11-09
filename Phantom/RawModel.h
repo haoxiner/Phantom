@@ -6,6 +6,7 @@ namespace phtm
 class RawModel
 {
 public:
+  int indexCount_;
   ID3D11Buffer *vertexBuffer_;
   ID3D11Buffer *indexBuffer_;
 };

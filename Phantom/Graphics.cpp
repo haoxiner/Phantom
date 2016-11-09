@@ -70,6 +70,23 @@ bool phtm::Graphics::Initialize(HWND hWnd)
     return false;
   }
   SetViewPort(width, height);
+
+  D3D11_RASTERIZER_DESC rasterDesc;
+  ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+  rasterDesc.AntialiasedLineEnable = false;
+  rasterDesc.CullMode = D3D11_CULL_BACK;
+  rasterDesc.DepthBias = 0;
+  rasterDesc.DepthBiasClamp = 0.0f;
+  rasterDesc.DepthClipEnable = true;
+  rasterDesc.FillMode = D3D11_FILL_SOLID;
+  rasterDesc.FrontCounterClockwise = false;
+  rasterDesc.MultisampleEnable = false;
+  rasterDesc.ScissorEnable = false;
+  rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+  HRESULT hr = d3dDevice_->CreateRasterizerState(&rasterDesc, &rasterState_);
+  if (FAILED(hr)) return false;
+  immediateContext_->RSSetState(rasterState_);
   return true;
 }
 
@@ -176,8 +193,8 @@ bool phtm::Graphics::InitializeSwapChain(HWND hWnd, int width, int height)
   }
   if (FAILED(hr))
     return false;
-  DXGI_SWAP_CHAIN_DESC sd = {0};
-  //ZeroMemory(&sd, sizeof(sd));
+  DXGI_SWAP_CHAIN_DESC sd;
+  ZeroMemory(&sd, sizeof(sd));
   sd.BufferCount = 1;
   sd.BufferDesc.Width = width;
   sd.BufferDesc.Height = height;
@@ -206,8 +223,8 @@ bool phtm::Graphics::InitializeDepthStencil(int width, int height)
 {
   HRESULT hr = S_OK;
   // Depth/Stencil Buffer
-  D3D11_TEXTURE2D_DESC depthStencilDesc = {0};
-  //ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+  D3D11_TEXTURE2D_DESC depthStencilDesc;
+  ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
   depthStencilDesc.Width = width;
   depthStencilDesc.Height = height;
   depthStencilDesc.MipLevels = 1;
