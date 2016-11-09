@@ -54,6 +54,8 @@ void phtm::Game::StartGame()
   }
 
   message_.componentCollection_ = &componentCollection_;
+  message_.input_ = &input_;
+
   engine_.AddSystem(renderingSystem_);
   engine_.Start();
 
@@ -64,7 +66,11 @@ void phtm::Game::UpdateGame(float deltaTimeInSeconds)
 {
   graphics_.ClearScreen();
   message_.deltaTimeInSeconds_ = deltaTimeInSeconds;
-  engine_.Update(message_);
+  if (input_.LeftHorizontalAxisX() > 0)
+  {
+    engine_.Update(message_);
+  }
+  
   graphics_.Update();
 }
 

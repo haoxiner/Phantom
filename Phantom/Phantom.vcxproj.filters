@@ -54,6 +54,9 @@
     <ClCompile Include="Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -99,6 +102,9 @@
       <Filter>头文件\Engine</Filter>
     </ClInclude>
     <ClInclude Include="RawModel.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
       <Filter>头文件\Engine</Filter>
     </ClInclude>
   </ItemGroup>

@@ -23,5 +23,5 @@ VSOUT VS(
 
 float4 PS(VSOUT pin):SV_Target
 {
-  return float4(pin.texCoord, 0.0, 1.0);
+  return float4(pin.normal * 0.5 + float3(0.5,0.5,0.5), 1.0);
 }

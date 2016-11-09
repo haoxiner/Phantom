@@ -30,7 +30,8 @@ void phtm::Application::Run()
     else
     {
       startTick = GetTickCount();
-      
+      // update input
+      input_.Update();
       // do game loop
       UpdateGame(deltaTime);
 
@@ -77,6 +78,10 @@ bool phtm::Application::Initialize()
   {
     return false;
   }
+  if (!input_.Initialize(hInstance_, hWnd_))
+  {
+    return false;
+  }
   return true;
 }
 
@@ -89,18 +94,9 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 {
   switch (message)
   {
-  case WM_KEYDOWN:
-  {
+  case WM_CLOSE:
     PostQuitMessage(0);
-    //m_Input->KeyDown((unsigned int)wparam);
     return 0;
-  }
-  break;
-  case WM_KEYUP:
-  {
-    //m_Input->KeyUp((unsigned int)wparam);
-    return 0;
-  }
   break;
   default:
     return DefWindowProc(hWnd, message, wParam, lParam);
@@ -109,7 +105,8 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 bool phtm::Application::InitializeWindow()
 {
-  WNDCLASSEX wc = {0};
+  WNDCLASSEX wc;
+  ZeroMemory(&wc, sizeof(wc));
   wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
   wc.lpfnWndProc = WindowProc;
   wc.cbClsExtra = 0;

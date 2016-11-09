@@ -1,5 +1,6 @@
 #pragma once
 #include "ComponentCollection.h"
+#include "Input.h"
 
 namespace phtm
 {
@@ -10,6 +11,7 @@ public:
   ~Message();
   float deltaTimeInSeconds_;
   ComponentCollection *componentCollection_;
+  Input *input_;
 private:
 };
 }
