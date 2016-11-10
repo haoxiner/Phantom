@@ -4,10 +4,27 @@
 
 static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob **ppBlobOut);
 
-phtm::RenderingSystem::RenderingSystem(Graphics *graphics)
+phtm::RenderingSystem::RenderingSystem(Graphics *graphics, int screenWidth, int screenHeight)
   :graphics_(graphics)
 {
+  auto scale = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
+  auto rotate = DirectX::XMMatrixRotationY(0.0f);
+  auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
+  DirectX::XMStoreFloat4x4(&changeOnResize.modelToWorld, modelMatrix);
   
+  DirectX::XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -30.9f, 0.0f);
+  DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+  DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+  auto viewMatrix = DirectX::XMMatrixLookAtLH(
+    pos, target, up);
+  DirectX::XMStoreFloat4x4(&changeOnResize.view_, viewMatrix);
+  
+  float verticalFOV = 0.5f*3.141592654f;
+  float aspectRatio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
+  auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(
+    verticalFOV, aspectRatio, 0.001f, 1000.0f);
+  DirectX::XMStoreFloat4x4(&changeOnResize.projection_, projMatrix);
 }
 
 bool phtm::RenderingSystem::Initialize()
@@ -20,16 +37,21 @@ bool phtm::RenderingSystem::Initialize()
   if (!success)
     return false;
 
-  ID3D11Buffer *constBuffer;
+  ID3D11Buffer *cbChangeOnResize = nullptr;
   D3D11_BUFFER_DESC constBufferDesc;
   ZeroMemory(&constBufferDesc, sizeof(constBufferDesc));
-  constBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-  constBufferDesc.ByteWidth = sizeof(Camera);
+  constBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+  constBufferDesc.ByteWidth = sizeof(ChangeOnResize);
   constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  auto hr = d3dDevice->CreateBuffer(&constBufferDesc, nullptr, &constBuffer);
+  D3D11_SUBRESOURCE_DATA initData;
+  ZeroMemory(&initData, sizeof(initData));
+  initData.pSysMem = &changeOnResize;
+  auto hr = d3dDevice->CreateBuffer(&constBufferDesc, &initData, &cbChangeOnResize);
   if (FAILED(hr))
     return false;
-  constantBuffers_.push_back(constBuffer);
+
+  constantBuffers_.push_back(cbChangeOnResize);
+
   simpleRenderer_.Initialize(
     vertexShaders_.back(),
     inputLayouts_.back(),

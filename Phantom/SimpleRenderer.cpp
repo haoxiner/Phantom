@@ -5,19 +5,17 @@ bool phtm::SimpleRenderer::Initialize(
   ID3D11VertexShader *vertexShader,
   ID3D11InputLayout *vertexLayout,
   ID3D11PixelShader *pixelShader,
-  ID3D11Buffer *constBuffer)
+  ID3D11Buffer *cbChangeOnResize)
 {
   vertexShader_ = vertexShader;
   vertexLayout_ = vertexLayout;
   pixelShader_ = pixelShader;
-  constBuffer_ = constBuffer;
+  cbChangeOnResize_ = cbChangeOnResize;
   return true;
 }
 
 void phtm::SimpleRenderer::Render(ID3D11DeviceContext *context, RawModel &rawModel, Camera &camera)
 {
-  context->UpdateSubresource(constBuffer_, 0, nullptr, &camera, 0, 0);
-
   context->IASetInputLayout(vertexLayout_);
   UINT stride1 = sizeof(Vertex);
   UINT offset1 = 0;
@@ -26,7 +24,7 @@ void phtm::SimpleRenderer::Render(ID3D11DeviceContext *context, RawModel &rawMod
   context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   context->VSSetShader(vertexShader_, nullptr, 0);
   context->PSSetShader(pixelShader_, nullptr, 0);
-  context->VSSetConstantBuffers(0, 1, &constBuffer_);
+  context->VSSetConstantBuffers(0, 1, &cbChangeOnResize_);
   context->DrawIndexed(rawModel.indexCount_, 0, 0);
 };
 

@@ -20,6 +20,6 @@ private:
   ID3D11VertexShader *vertexShader_;
   ID3D11PixelShader *pixelShader_;
   ID3D11InputLayout *vertexLayout_;
-  ID3D11Buffer *constBuffer_;
+  ID3D11Buffer *cbChangeOnResize_;
 };
 }
