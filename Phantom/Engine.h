@@ -10,7 +10,7 @@ namespace phtm
 class Engine
 {
 public:
-  void Start();
+  bool Start();
   void Update(Message &message);
   void AddSystem(System *system);
   void Shutdown();

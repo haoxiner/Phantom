@@ -158,7 +158,7 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
-    <ClCompile Include="SimpleShader.cpp" />
+    <ClCompile Include="SimpleRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -176,7 +176,8 @@
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="RenderingComponent.h" />
     <ClInclude Include="RenderingSystem.h" />
-    <ClInclude Include="SimpleShader.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="SimpleRenderer.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>

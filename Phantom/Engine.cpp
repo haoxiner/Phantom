@@ -1,11 +1,13 @@
 #include "Engine.h"
 
-void phtm::Engine::Start()
+bool phtm::Engine::Start()
 {
   for (auto system : systems_)
   {
-    system->Initialize();
+    if (!system->Initialize())
+      return false;
   }
+  return true;
 }
 
 void phtm::Engine::Update(Message &message)

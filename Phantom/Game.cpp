@@ -61,9 +61,14 @@ void phtm::Game::StartGame()
   message_.camera_ = &camera_;
 
   engine_.AddSystem(renderingSystem_);
-  engine_.Start();
-
-  running_ = true;
+  if (!engine_.Start())
+  {
+    running_ = false;
+  }
+  else
+  {
+    running_ = true;
+  }
 }
 
 void phtm::Game::UpdateGame(float deltaTimeInSeconds)

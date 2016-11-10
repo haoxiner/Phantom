@@ -45,9 +45,6 @@
     <ClCompile Include="Player.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleShader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Message.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -61,6 +58,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="InputHandler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleRenderer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,9 +98,6 @@
     <ClInclude Include="Player.h">
       <Filter>头文件\Game</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleShader.h">
-      <Filter>头文件\Core</Filter>
-    </ClInclude>
     <ClInclude Include="RenderingComponent.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
@@ -117,6 +114,12 @@
       <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="InputHandler.h">
+      <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleRenderer.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
   </ItemGroup>
