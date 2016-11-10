@@ -5,12 +5,14 @@ bool phtm::SimpleRenderer::Initialize(
   ID3D11VertexShader *vertexShader,
   ID3D11InputLayout *vertexLayout,
   ID3D11PixelShader *pixelShader,
-  ID3D11Buffer *cbChangeOnResize)
+  ID3D11Buffer *cbChangeOnResize,
+  ID3D11Buffer *cbChangeEveryFrame)
 {
   vertexShader_ = vertexShader;
   vertexLayout_ = vertexLayout;
   pixelShader_ = pixelShader;
   cbChangeOnResize_ = cbChangeOnResize;
+  cbChangeEveryFrame_ = cbChangeEveryFrame;
   return true;
 }
 
@@ -25,6 +27,7 @@ void phtm::SimpleRenderer::Render(ID3D11DeviceContext *context, RawModel &rawMod
   context->VSSetShader(vertexShader_, nullptr, 0);
   context->PSSetShader(pixelShader_, nullptr, 0);
   context->VSSetConstantBuffers(0, 1, &cbChangeOnResize_);
+  context->VSSetConstantBuffers(1, 1, &cbChangeEveryFrame_);
   context->DrawIndexed(rawModel.indexCount_, 0, 0);
 };
 

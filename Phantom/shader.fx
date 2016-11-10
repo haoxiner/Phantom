@@ -1,12 +1,12 @@
-cbuffer cbPerObject : register(b0)
+cbuffer cbChangeOnResize : register(b0)
+{
+  float4x4 projection;
+};
+
+cbuffer cbChangeEveryFrame : register(b1)
 {
   float4x4 modelToWorld;
   float4x4 view;
-  float4x4 proj;
-};
-cbuffer cbChangeOnResize :register(b1)
-{
-  float4x4 projection;
 };
 
 struct VS_IN
@@ -30,7 +30,7 @@ VS_OUT VS(
   vout.position = mul(modelToWorld,float4(vin.position, 1.0f));
   vout.position = mul(view, vout.position);
   vout.posInCameraSpace = vout.position;
-  vout.position = mul(proj, vout.position);
+  vout.position = mul(projection, vout.position);
   vout.normal = mul(modelToWorld,float4(vin.normal, 0.0f));
   vout.texCoord = vin.texCoord;
   return vout;

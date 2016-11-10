@@ -7,18 +7,18 @@ static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPC
 phtm::RenderingSystem::RenderingSystem(Graphics *graphics, int screenWidth, int screenHeight)
   :graphics_(graphics)
 {
-  auto scale = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
-  auto rotate = DirectX::XMMatrixRotationY(0.0f);
+  auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
+  auto rotate = DirectX::XMMatrixRotationY(3.14f);
   auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
-  DirectX::XMStoreFloat4x4(&changeOnResize.modelToWorld, modelMatrix);
+  DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
   
-  DirectX::XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -30.9f, 0.0f);
-  DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+  DirectX::XMVECTOR pos = DirectX::XMVectorSet(0.0f, 14.0f, -30.9f, 0.0f);
+  DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 14.0f, 0.0f, 0.0f);
   DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
   auto viewMatrix = DirectX::XMMatrixLookAtLH(
     pos, target, up);
-  DirectX::XMStoreFloat4x4(&changeOnResize.view_, viewMatrix);
+  DirectX::XMStoreFloat4x4(&changeEveryFrame.view_, viewMatrix);
   
   float verticalFOV = 0.5f*3.141592654f;
   float aspectRatio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
@@ -49,14 +49,27 @@ bool phtm::RenderingSystem::Initialize()
   auto hr = d3dDevice->CreateBuffer(&constBufferDesc, &initData, &cbChangeOnResize);
   if (FAILED(hr))
     return false;
-
   constantBuffers_.push_back(cbChangeOnResize);
+
+  ID3D11Buffer *cbChangeEveryFrame = nullptr;
+  ZeroMemory(&constBufferDesc, sizeof(constBufferDesc));
+  constBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+  constBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+  constBufferDesc.ByteWidth = sizeof(ChangeEveryFrame);
+  constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  initData.pSysMem = &changeEveryFrame;
+  hr = d3dDevice->CreateBuffer(&constBufferDesc, &initData, &cbChangeEveryFrame);
+  
+  if (FAILED(hr))
+    return false;
+  constantBuffers_.push_back(cbChangeEveryFrame);
 
   simpleRenderer_.Initialize(
     vertexShaders_.back(),
     inputLayouts_.back(),
     pixelShaders_.back(),
-    constantBuffers_.back());
+    cbChangeOnResize,
+    cbChangeEveryFrame);
   return true;
 }
 

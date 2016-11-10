@@ -12,9 +12,13 @@ namespace phtm
 class ChangeOnResize
 {
 public:
+  DirectX::XMFLOAT4X4 projection_;
+};
+class ChangeEveryFrame
+{
+public:
   DirectX::XMFLOAT4X4 modelToWorld;
   DirectX::XMFLOAT4X4 view_;
-  DirectX::XMFLOAT4X4 projection_;
 };
 class RenderingSystem : public System
 {
@@ -36,5 +40,6 @@ private:
 
 private:
   ChangeOnResize changeOnResize;
+  ChangeEveryFrame changeEveryFrame;
 };
 }
