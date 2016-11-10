@@ -99,6 +99,8 @@ bool phtm::SimpleShader::Initialize(ID3D11Device *d3dDevice)
 
 void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel, Camera &camera)
 {
+  context->UpdateSubresource(constBuffer_, 0, nullptr, &camera, 0, 0);
+
   context->IASetInputLayout(vertexLayout_);
   UINT stride1 = sizeof(Vertex);
   UINT offset1 = 0;
@@ -108,7 +110,6 @@ void phtm::SimpleShader::Render(ID3D11DeviceContext *context, RawModel &rawModel
   context->VSSetShader(vertexShader_, nullptr, 0);
   context->PSSetShader(pixelShader_, nullptr, 0);
   context->VSSetConstantBuffers(0, 1, &constBuffer_);
-  context->UpdateSubresource(constBuffer_, 0, nullptr, &camera, 0, 0);
   context->DrawIndexed(rawModel.indexCount_, 0, 0);
 };
 

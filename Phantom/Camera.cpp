@@ -1,19 +1,26 @@
 #include "Camera.h"
-#include <cmath>
 
 phtm::Camera::Camera()
 {
-  DirectX::XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);
-  DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+  auto scale = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
+  auto rotate = DirectX::XMMatrixRotationY(0.0f);
+  auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
+  //modelMatrix = DirectX::XMMatrixIdentity();
+  //modelMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 1.0f);
+  DirectX::XMStoreFloat4x4(&modelToWorld_, modelMatrix);
+  //
+  DirectX::XMVECTOR pos = DirectX::XMVectorSet(0.0f, 0.0f, -30.9f, 0.0f);
+  DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
   DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-  view_ = DirectX::XMMatrixLookAtLH(
+  auto viewMatrix = DirectX::XMMatrixLookAtLH(
     pos, target, up);
+  DirectX::XMStoreFloat4x4(&view_, viewMatrix);
 }
 
 void phtm::Camera::SetPerspective(float verticalFOV, float aspectRatio)
 {
-  /*projection_ = DirectX::XMMatrixPerspectiveFovLH(
-    verticalFOV, aspectRatio, 0.1f, 1000.0f);*/
-  projection_ = DirectX::XMMatrixIdentity();
+  auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(
+    verticalFOV, aspectRatio, 0.001f, 1000.0f);
+  DirectX::XMStoreFloat4x4(&projection_, projMatrix);
 }

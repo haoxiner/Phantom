@@ -1,6 +1,6 @@
 #pragma once
 #include "Graphics.h"
-#include "Input.h"
+#include "InputHandler.h"
 #include <Windows.h>
 
 namespace phtm
@@ -16,7 +16,7 @@ protected:
   virtual void EndGame() = 0;
 protected:
   Graphics graphics_;
-  Input input_;
+  InputHandler inputHandler_;
   bool running_;
   int screenWidth_;
   int screenHeight_;

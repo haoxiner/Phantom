@@ -8,7 +8,8 @@ class Camera
 public:
   Camera();
   void SetPerspective(float verticalFOV, float aspectRatio);
-  DirectX::XMMATRIX view_;
-  DirectX::XMMATRIX projection_;
+  DirectX::XMFLOAT4X4 modelToWorld_;
+  DirectX::XMFLOAT4X4 view_;
+  DirectX::XMFLOAT4X4 projection_;
 };
 }

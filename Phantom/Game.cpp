@@ -16,7 +16,7 @@ void phtm::Game::StartGame()
   renderingSystem_ = new RenderingSystem(&graphics_);
   auto &rawModel = componentCollection_.renderingComponents_[0].rawModel_;
 
-  std::ifstream rmd("D:/GameDev/Resources/quad.rmd", std::ios::binary);
+  std::ifstream rmd("D:/GameDev/Resources/knight.rmd", std::ios::binary);
   int numOfVertices, numOfFaces;
   rmd.read((char*)&numOfVertices, sizeof(int));
   rmd.read((char*)&numOfFaces, sizeof(int));
@@ -54,10 +54,10 @@ void phtm::Game::StartGame()
   }
 
   camera_.SetPerspective(
-    25.0f*3.14f,
+    0.5f*3.141592654f,
     static_cast<float>(screenWidth_)/static_cast<float>(screenHeight_));
   message_.componentCollection_ = &componentCollection_;
-  message_.input_ = &input_;
+  message_.input_ = &(inputHandler_.input_);
   message_.camera_ = &camera_;
 
   engine_.AddSystem(renderingSystem_);
@@ -68,14 +68,14 @@ void phtm::Game::StartGame()
 
 void phtm::Game::UpdateGame(float deltaTimeInSeconds)
 {
-  if (input_.Quit())
+  if (inputHandler_.input_.Quit())
   {
     running_ = false;
     return;
   }
   graphics_.ClearScreen();
   message_.deltaTimeInSeconds_ = deltaTimeInSeconds;
-  if (input_.LeftHorizontalAxisX() > 0)
+  if (inputHandler_.input_.LeftHorizontalAxisX() > 0)
   {
     engine_.Update(message_);
   }

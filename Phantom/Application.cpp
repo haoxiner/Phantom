@@ -31,7 +31,7 @@ void phtm::Application::Run()
     {
       startTick = GetTickCount();
       // update input
-      input_.Update();
+      inputHandler_.Update();
       // do game loop
       UpdateGame(deltaTime);
 
@@ -78,7 +78,7 @@ bool phtm::Application::Initialize()
   {
     return false;
   }
-  if (!input_.Initialize(hInstance_, hWnd_))
+  if (!inputHandler_.Initialize(hInstance_, hWnd_))
   {
     return false;
   }
@@ -87,7 +87,7 @@ bool phtm::Application::Initialize()
 
 void phtm::Application::Shutdown()
 {
-  input_.Close();
+  inputHandler_.Close();
   graphics_.Shutdown();
 }
 
