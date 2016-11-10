@@ -57,6 +57,7 @@ bool phtm::RenderingSystem::Initialize()
   constBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
   constBufferDesc.ByteWidth = sizeof(ChangeEveryFrame);
   constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  ZeroMemory(&initData, sizeof(initData));
   initData.pSysMem = &changeEveryFrame;
   hr = d3dDevice->CreateBuffer(&constBufferDesc, &initData, &cbChangeEveryFrame);
   
@@ -70,11 +71,29 @@ bool phtm::RenderingSystem::Initialize()
     pixelShaders_.back(),
     cbChangeOnResize,
     cbChangeEveryFrame);
+
   return true;
 }
 
 void phtm::RenderingSystem::Update(Message &message)
 {
+  static float r = 0.0f;
+  auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
+  auto rotate = DirectX::XMMatrixRotationY(r);
+  r += 0.001f;
+  auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
+  DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
+  auto d3dContext = graphics_->GetD3DDeviceContext();
+  D3D11_MAPPED_SUBRESOURCE mappedResource;
+  ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+  //	Disable GPU access to the vertex buffer data.
+  d3dContext->Map(constantBuffers_.back(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+  //	Update the vertex buffer here.
+  memcpy(mappedResource.pData, &changeEveryFrame, sizeof(ChangeEveryFrame));
+  //	Reenable GPU access to the vertex buffer data.
+  d3dContext->Unmap(constantBuffers_.back(), 0);
+
   simpleRenderer_.Render(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
 }
 
