@@ -25,6 +25,9 @@
     <Filter Include="头文件\Core">
       <UniqueIdentifier>{f2bf80ec-4cea-49c4-a2c3-3370f7d09ecf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Components">
+      <UniqueIdentifier>{c1902c0a-8cb5-4515-9528-5704deb74627}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -98,9 +101,6 @@
     <ClInclude Include="Player.h">
       <Filter>头文件\Game</Filter>
     </ClInclude>
-    <ClInclude Include="RenderingComponent.h">
-      <Filter>头文件\Core</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentCollection.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
@@ -121,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="SimpleRenderer.h">
       <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingComponent.h">
+      <Filter>头文件\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>头文件\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

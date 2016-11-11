@@ -80,12 +80,12 @@ void phtm::RenderingSystem::Update(Message &message)
   static float r = 0.0f;
   auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
   auto rotate = DirectX::XMMatrixRotationY(r);
-  r += 0.001f;
+  r += 30.0f/180.0f*3.1416f*message.deltaTimeInSeconds_;
   auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
   DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
   auto d3dContext = graphics_->GetD3DDeviceContext();
   D3D11_MAPPED_SUBRESOURCE mappedResource;
-  ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+  //ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
   //	Disable GPU access to the vertex buffer data.
   d3dContext->Map(constantBuffers_.back(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

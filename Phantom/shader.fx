@@ -23,6 +23,13 @@ struct VS_OUT
   float2 texCoord:TEXCOORD;
 };
 
+#define LN2DIV8               0.08664
+#define Log2Of1OnLn2_Plus1    1.528766
+float SphericalGaussianApprox(float CosX, float ModifiedSpecularPower)
+{
+    return exp2(ModifiedSpecularPower* CosX - ModifiedSpecularPower);
+}
+
 VS_OUT VS(
   VS_IN vin)
 {
@@ -30,16 +37,27 @@ VS_OUT VS(
   vout.position = mul(modelToWorld,float4(vin.position, 1.0f));
   vout.position = mul(view, vout.position);
   vout.posInCameraSpace = vout.position;
+  
   vout.position = mul(projection, vout.position);
   vout.normal = mul(modelToWorld,float4(vin.normal, 0.0f));
+  vout.normal = mul(view, vout.normal);
   vout.texCoord = vin.texCoord;
   return vout;
 }
 
 float4 PS(VS_OUT pin):SV_Target
 {
+  float4 n = normalize(pin.normal);
   float4 lightDir = normalize(float4(1.0f,1.0f,-1.0f,0.0f));
-  float diff = dot(normalize(pin.normal), lightDir);
-  float4 color = pow(float4(diff,diff,diff, 1.0f), 1.0/1.0);
+  float diff = dot(n, lightDir);
+  float4 h = normalize(n + normalize(reflect(normalize(pin.posInCameraSpace - float4(1.0f,1.0f,-1.0f,0.0f)), n)));
+
+  float DotNH = dot(h,n);
+  float gloss = 1.0f;
+  float ModifiedSpecularPower = exp2(10 * gloss + Log2Of1OnLn2_Plus1);
+  float SpecularLighting = (LN2DIV8 * ModifiedSpecularPower + 0.25) * SphericalGaussianApprox(DotNH, ModifiedSpecularPower);
+
+  float intensity = diff + SpecularLighting;
+  float4 color = pow(float4(intensity,intensity,intensity, 1.0f), 1.0/1.0);
   return color;
 }
