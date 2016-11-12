@@ -52,12 +52,11 @@ float4 PS(VS_OUT pin):SV_Target
   float diff = dot(n, lightDir);
   float4 h = normalize(n + normalize(reflect(normalize(pin.posInCameraSpace - float4(1.0f,1.0f,-1.0f,0.0f)), n)));
 
-  float DotNH = dot(h,n);
-  float gloss = 1.0f;
-  float ModifiedSpecularPower = exp2(10 * gloss + Log2Of1OnLn2_Plus1);
-  float SpecularLighting = (LN2DIV8 * ModifiedSpecularPower + 0.25) * SphericalGaussianApprox(DotNH, ModifiedSpecularPower);
-
-  float intensity = diff + SpecularLighting;
+  float DotNH = max(0.0f, dot(h,n));
+  float K = 100.0f;
+  float SpecularLighting = exp(-K*(1-DotNH));
+  //SpecularLighting = pow(DotNH, K);
+  float intensity = SpecularLighting * 0.5 + diff * 0.5;
   float4 color = pow(float4(intensity,intensity,intensity, 1.0f), 1.0/1.0);
   return color;
 }
