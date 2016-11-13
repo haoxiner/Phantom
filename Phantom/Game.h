@@ -5,6 +5,7 @@
 #include "RenderingSystem.h"
 #include "ComponentCollection.h"
 #include "Camera.h"
+#include "Player.h"
 
 namespace phtm
 {
@@ -21,6 +22,7 @@ private:
   Message message_;
   Engine engine_;
   Camera camera_;
+  Player *player_;
   RenderingSystem *renderingSystem_;
   ComponentCollection componentCollection_;
 };

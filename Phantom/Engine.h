@@ -13,6 +13,7 @@ public:
   bool Start();
   void Update(Message &message);
   void AddSystem(System *system);
+  void AddEntity(Entity *entity);
   void Shutdown();
 private:
   std::vector<System*> systems_;

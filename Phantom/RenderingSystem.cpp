@@ -77,10 +77,13 @@ bool phtm::RenderingSystem::Initialize()
 
 void phtm::RenderingSystem::Update(Message &message)
 {
-  static float r = 0.0f;
+  auto &renderingComponent = message.componentCollection_->renderingComponents_[0];
   auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
-  auto rotate = DirectX::XMMatrixRotationY(r);
-  r += 30.0f/180.0f*3.1416f*message.deltaTimeInSeconds_;
+  auto rotate = DirectX::XMMatrixTranslation(
+    renderingComponent.position_->x,
+    renderingComponent.position_->y,
+    renderingComponent.position_->z);
+  
   auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
   DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
   auto d3dContext = graphics_->GetD3DDeviceContext();

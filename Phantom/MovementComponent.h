@@ -11,6 +11,7 @@ public:
   DirectX::XMFLOAT2 direction_;
   float moveSpeed_;
   float rotateSpeed_;
+  float upwardSpeed_;
   // instant value used in movement system
   DirectX::XMFLOAT2 instantDirection_;
   // make following calculation by SIMD

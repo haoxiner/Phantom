@@ -27,6 +27,11 @@ void phtm::Engine::AddSystem(System *system)
   systems_.push_back(system);
 }
 
+void phtm::Engine::AddEntity(Entity *entity)
+{
+  entities_.push_back(entity);
+}
+
 void phtm::Engine::Shutdown()
 {
   for (auto system : systems_)

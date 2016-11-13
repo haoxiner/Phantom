@@ -3,7 +3,8 @@
 #include <fstream>
 
 phtm::Game::Game()
-  :renderingSystem_(nullptr)
+  :renderingSystem_(nullptr),
+  player_(nullptr)
 {
 }
 
@@ -57,11 +58,17 @@ void phtm::Game::StartGame()
     return;
   }
 
+  componentCollection_.movementComponents_[0].position_ = DirectX::XMFLOAT3(0, 0, 0);
+  componentCollection_.renderingComponents_[0].position_ = &componentCollection_.movementComponents_[0].position_;
+  componentCollection_.renderingComponents_[0].rotation_ = &componentCollection_.movementComponents_[0].instantDirection_;
+  player_ = new Player(&componentCollection_.movementComponents_[0],&componentCollection_.renderingComponents_[0]);
+
   message_.componentCollection_ = &componentCollection_;
   message_.input_ = &(inputHandler_.input_);
   message_.camera_ = &camera_;
 
   engine_.AddSystem(renderingSystem_);
+  engine_.AddEntity(player_);
   if (!engine_.Start())
   {
     running_ = false;

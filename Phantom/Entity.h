@@ -1,13 +1,13 @@
 #pragma once
-#include "Message.h"
 
 namespace phtm
 {
+class Message;
 class Entity
 {
 public:
   Entity() {}
-  virtual ~Entity() = 0;
+  virtual ~Entity();
   virtual void Update(Message &message) = 0;
 private:
 
