@@ -16,5 +16,6 @@ public:
 private:
   MovementComponent *movementComponent_;
   RenderingComponent *renderingComponent_;
+  float forwardRotation_;
 };
 }

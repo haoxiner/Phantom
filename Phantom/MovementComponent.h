@@ -9,7 +9,7 @@ public:
   DirectX::XMFLOAT3 position_;
   // 2D movement only
   float rotation_;
-
+  
   float moveSpeed_;
   float rotateSpeed_;
   float upwardSpeed_;
