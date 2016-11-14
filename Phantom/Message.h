@@ -1,10 +1,10 @@
 #pragma once
-#include "ComponentCollection.h"
-#include "Input.h"
-#include "Camera.h"
 
 namespace phtm
 {
+class Input;
+class Camera;
+class ComponentCollection;
 class Message
 {
 public:

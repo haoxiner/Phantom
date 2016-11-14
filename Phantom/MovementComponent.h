@@ -8,12 +8,13 @@ class MovementComponent
 public:
   DirectX::XMFLOAT3 position_;
   // 2D movement only
-  DirectX::XMFLOAT2 direction_;
+  float rotation_;
+
   float moveSpeed_;
   float rotateSpeed_;
   float upwardSpeed_;
   // instant value used in movement system
-  DirectX::XMFLOAT2 instantDirection_;
+  float instantRotation_;
   // make following calculation by SIMD
   // direction_ = normalize(direction_);
   // instantDirection_ = normalize(interp(normalize(instantDirection_),deltaTime*rotateSpeed,direction_));

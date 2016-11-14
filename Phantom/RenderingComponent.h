@@ -9,6 +9,6 @@ class RenderingComponent
 public:
   RawModel rawModel_;
   DirectX::XMFLOAT3 *position_;
-  DirectX::XMFLOAT2 *rotation_;
+  float *rotation_;
 };
 }

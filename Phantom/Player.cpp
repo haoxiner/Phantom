@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Message.h"
+#include "Input.h"
 
 phtm::Player::Player(
   MovementComponent * movementComponent,
@@ -12,5 +13,6 @@ phtm::Player::Player(
 void phtm::Player::Update(Message &message)
 {
   Input *input = message.input_;
-  movementComponent_->position_.z += 10 * message.deltaTimeInSeconds_ * input->LeftHorizontalAxisX();
+  movementComponent_->position_.z += 10 * message.deltaTimeInSeconds_ * input->LeftHorizontalAxisY();
+  movementComponent_->instantRotation_ += 10 * message.deltaTimeInSeconds_ * input->LeftHorizontalAxisX();
 }

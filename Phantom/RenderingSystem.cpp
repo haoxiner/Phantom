@@ -1,5 +1,6 @@
 #include "RenderingSystem.h"
 #include "Vertex.h"
+#include "ComponentCollection.h"
 #include <d3dcompiler.h>
 
 static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob **ppBlobOut);
@@ -79,12 +80,14 @@ void phtm::RenderingSystem::Update(Message &message)
 {
   auto &renderingComponent = message.componentCollection_->renderingComponents_[0];
   auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
-  auto rotate = DirectX::XMMatrixTranslation(
+  auto rotate = DirectX::XMMatrixRotationY(*renderingComponent.rotation_);
+  auto translate = DirectX::XMMatrixTranslation(
     renderingComponent.position_->x,
     renderingComponent.position_->y,
     renderingComponent.position_->z);
   
   auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
+  modelMatrix = DirectX::XMMatrixMultiply(modelMatrix, translate);
   DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
   auto d3dContext = graphics_->GetD3DDeviceContext();
   D3D11_MAPPED_SUBRESOURCE mappedResource;

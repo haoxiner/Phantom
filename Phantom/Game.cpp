@@ -60,7 +60,7 @@ void phtm::Game::StartGame()
 
   componentCollection_.movementComponents_[0].position_ = DirectX::XMFLOAT3(0, 0, 0);
   componentCollection_.renderingComponents_[0].position_ = &componentCollection_.movementComponents_[0].position_;
-  componentCollection_.renderingComponents_[0].rotation_ = &componentCollection_.movementComponents_[0].instantDirection_;
+  componentCollection_.renderingComponents_[0].rotation_ = &componentCollection_.movementComponents_[0].instantRotation_;
   player_ = new Player(&componentCollection_.movementComponents_[0],&componentCollection_.renderingComponents_[0]);
 
   message_.componentCollection_ = &componentCollection_;
@@ -88,11 +88,7 @@ void phtm::Game::UpdateGame(float deltaTimeInSeconds)
   }
   graphics_.ClearScreen();
   message_.deltaTimeInSeconds_ = deltaTimeInSeconds;
-  if (inputHandler_.input_.LeftHorizontalAxisX() > 0)
-  {
-    engine_.Update(message_);
-  }
-  
+  engine_.Update(message_);
   graphics_.Update();
 }
 

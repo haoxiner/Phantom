@@ -69,6 +69,9 @@
     <ClCompile Include="Entity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MovementSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="MovementComponent.h">
       <Filter>头文件\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementSystem.h">
+      <Filter>头文件\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
