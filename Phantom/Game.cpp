@@ -15,6 +15,7 @@ phtm::Game::~Game()
 void phtm::Game::StartGame()
 {
   renderingSystem_ = new RenderingSystem(&graphics_, screenWidth_, screenHeight_);
+  movementSystem_ = new MovementSystem();
   auto &rawModel = componentCollection_.renderingComponents_[0].rawModel_;
 
   std::ifstream rmd("D:/GameDev/Resources/knight.rmd", std::ios::binary);
@@ -68,6 +69,7 @@ void phtm::Game::StartGame()
   message_.camera_ = &camera_;
 
   engine_.AddSystem(renderingSystem_);
+  engine_.AddSystem(movementSystem_);
   engine_.AddEntity(player_);
   if (!engine_.Start())
   {

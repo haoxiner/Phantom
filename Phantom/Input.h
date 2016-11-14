@@ -7,8 +7,9 @@ class Input
 public:
   Input();
   bool Quit();
-  float LeftHorizontalAxisX();
-  float LeftHorizontalAxisY();
+  float LeftHorizontalAxis();
+  float LeftVerticalAxis();
+  float LeftAxis();
   bool keyDown_[256];
 };
 }

@@ -3,6 +3,7 @@
 #include "Message.h"
 #include "Engine.h"
 #include "RenderingSystem.h"
+#include "MovementSystem.h"
 #include "ComponentCollection.h"
 #include "Camera.h"
 #include "Player.h"
@@ -24,6 +25,7 @@ private:
   Camera camera_;
   Player *player_;
   RenderingSystem *renderingSystem_;
+  MovementSystem *movementSystem_;
   ComponentCollection componentCollection_;
 };
 }
