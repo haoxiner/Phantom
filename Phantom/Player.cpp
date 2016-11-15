@@ -4,8 +4,8 @@
 #include <cmath>
 
 phtm::Player::Player(
-  MovementComponent * movementComponent,
-  RenderingComponent * renderingComponent)
+  MovementComponent *movementComponent,
+  RenderingComponent *renderingComponent)
   : movementComponent_(movementComponent),
   renderingComponent_(renderingComponent),
   forwardRotation_(0.0f)
@@ -29,7 +29,6 @@ void phtm::Player::Update(Message &message)
   }
   else
   {
-    forwardRotation_ = movementComponent_->instantRotation_;
     movementComponent_->rotateSpeed_ = 0.0f;
   }
 }

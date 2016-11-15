@@ -13,6 +13,8 @@ public:
     RenderingComponent *renderingComponent);
   virtual ~Player() {}
   virtual void Update(Message &message);
+  float GetForwareRotation() { return forwardRotation_; }
+  const DirectX::XMFLOAT3 &GetPosition() { return movementComponent_->position_; }
 private:
   MovementComponent *movementComponent_;
   RenderingComponent *renderingComponent_;
