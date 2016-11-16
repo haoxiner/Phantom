@@ -71,3 +71,31 @@ float phtm::Input::LeftAxis()
   }
   return table[vertical][horizontal];
 }
+
+float phtm::Input::RightHorizontalAxis()
+{
+  float value = 0.0f;
+  if (keyDown_[DIK_LEFT])
+  {
+    value -= 1.0f;
+  }
+  if (keyDown_[DIK_RIGHT])
+  {
+    value += 1.0f;
+  }
+  return value;
+}
+
+float phtm::Input::RightVerticalAxis()
+{
+  float value = 0.0f;
+  if (keyDown_[DIK_DOWN])
+  {
+    value -= 1.0f;
+  }
+  if (keyDown_[DIK_UP])
+  {
+    value += 1.0f;
+  }
+  return value;
+}

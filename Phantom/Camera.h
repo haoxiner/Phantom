@@ -15,5 +15,6 @@ public:
 private:
   Player *player_;
   float distance_;
+  float roll_, pitch_, yaw_;
 };
 }
