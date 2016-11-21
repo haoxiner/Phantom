@@ -8,20 +8,7 @@ static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPC
 
 phtm::RenderingSystem::RenderingSystem(Graphics *graphics, int screenWidth, int screenHeight)
   :graphics_(graphics)
-{
-  auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
-  auto rotate = DirectX::XMMatrixRotationY(3.14f);
-  auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
-  DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
-  
-  DirectX::XMVECTOR pos = DirectX::XMVectorSet(0.0f, 14.0f, -30.9f, 0.0f);
-  DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 14.0f, 0.0f, 0.0f);
-  DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-  auto viewMatrix = DirectX::XMMatrixLookAtLH(
-    pos, target, up);
-  DirectX::XMStoreFloat4x4(&changeEveryFrame.view_, viewMatrix);
-  
+{  
   float verticalFOV = 0.5f*3.141592654f;
   float aspectRatio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
   auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(
@@ -105,7 +92,6 @@ void phtm::RenderingSystem::Update(Message &message)
   d3dContext->Unmap(constantBuffers_.back(), 0);
 
   SimpleRender(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
-  //simpleRenderer_.Render(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
 }
 
 void phtm::RenderingSystem::SimpleRender(ID3D11DeviceContext * context, RawModel & rawModel, Camera & camera)
