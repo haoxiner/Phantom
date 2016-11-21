@@ -69,6 +69,12 @@
     <ClCompile Include="MovementSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -119,9 +125,6 @@
     <ClInclude Include="InputHandler.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="RenderingComponent.h">
       <Filter>头文件\Components</Filter>
     </ClInclude>
@@ -129,6 +132,12 @@
       <Filter>头文件\Components</Filter>
     </ClInclude>
     <ClInclude Include="MovementSystem.h">
+      <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>头文件\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
   </ItemGroup>

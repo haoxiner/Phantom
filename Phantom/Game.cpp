@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Vertex.h"
+#include "Terrain.h"
 #include <fstream>
 
 phtm::Game::Game()
@@ -16,8 +17,9 @@ void phtm::Game::StartGame()
 {
   renderingSystem_ = new RenderingSystem(&graphics_, screenWidth_, screenHeight_);
   movementSystem_ = new MovementSystem();
-  auto &rawModel = componentCollection_.renderingComponents_[0].rawModel_;
 
+  // load model
+  auto &rawModel = componentCollection_.renderingComponents_[0].rawModel_;
   std::ifstream rmd("D:/GameDev/Resources/knight.rmd", std::ios::binary);
   int numOfVertices, numOfFaces;
   rmd.read((char*)&numOfVertices, sizeof(int));
@@ -25,7 +27,7 @@ void phtm::Game::StartGame()
   rawModel.indexCount_ = numOfFaces * 3;
   Vertex *vertices = new Vertex[numOfVertices];
   rmd.read((char*)vertices, numOfVertices * sizeof(Vertex));
-
+  // submit to GPU
   D3D11_BUFFER_DESC bufferDesc;
   ZeroMemory(&bufferDesc, sizeof(bufferDesc));
   bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -41,9 +43,10 @@ void phtm::Game::StartGame()
   {
     return;
   }
-  
   int *indices = new int[numOfFaces * 3];
   rmd.read((char*)indices, numOfFaces * 3 * sizeof(int));
+  rmd.close();
+
   D3D11_BUFFER_DESC indexBufferDesc;
   ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
   indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -59,10 +62,43 @@ void phtm::Game::StartGame()
     return;
   }
 
+
+  // player
+  componentCollection_.movementComponents_[0].SetActive(true);
+  componentCollection_.renderingComponents_[0].SetActive(true);
   componentCollection_.movementComponents_[0].position_ = DirectX::XMFLOAT3(0, 0, 0);
   componentCollection_.renderingComponents_[0].position_ = &componentCollection_.movementComponents_[0].position_;
   componentCollection_.renderingComponents_[0].rotation_ = &componentCollection_.movementComponents_[0].instantRotation_;
   player_ = new Player(&componentCollection_.movementComponents_[0],&componentCollection_.renderingComponents_[0]);
+  
+  
+  // terrain
+  componentCollection_.movementComponents_[1].SetActive(false);
+  componentCollection_.renderingComponents_[1].SetActive(true);
+  componentCollection_.movementComponents_[1].position_ = DirectX::XMFLOAT3(0, 0, 0);
+  componentCollection_.renderingComponents_[1].position_ = &componentCollection_.movementComponents_[1].position_;
+  componentCollection_.renderingComponents_[1].rotation_ = &componentCollection_.movementComponents_[1].instantRotation_;
+  //auto terrain = new Terrain(&componentCollection_.movementComponents_[1], &componentCollection_.renderingComponents_[1]);
+  std::vector<Vertex> terrainVertices;
+  std::vector<int> terrainIndices;
+  Terrain::GenerateTerrain(800, 256, terrainVertices, terrainIndices);
+  auto &terrainModel = componentCollection_.renderingComponents_[1].rawModel_;
+  terrainModel.indexCount_ = terrainIndices.size();
+  bufferDesc.ByteWidth = sizeof(Vertex) * terrainVertices.size();
+  initData.pSysMem = &terrainVertices[0];
+  hr = graphics_.GetD3DDevice()->CreateBuffer(
+    &bufferDesc, &initData, &terrainModel.vertexBuffer_);
+  if (FAILED(hr))
+  {
+    return;
+  }
+  indexBufferDesc.ByteWidth = sizeof(int) * terrainIndices.size();
+  indexData.pSysMem = &terrainIndices[0];
+  hr = graphics_.GetD3DDevice()->CreateBuffer(&indexBufferDesc, &indexData, &terrainModel.indexBuffer_);
+  if (FAILED(hr))
+  {
+    return;
+  }
 
   message_.componentCollection_ = &componentCollection_;
   message_.input_ = &(inputHandler_.input_);

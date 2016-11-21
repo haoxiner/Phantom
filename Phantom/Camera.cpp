@@ -4,16 +4,18 @@
 #include "Input.h"
 
 phtm::Camera::Camera()
-  :theta_(0.0f), phi_(0.45f * 3.14f), radius_(40.0f)
+  :theta_(0.0f), phi_(0.5f * 3.14f), radius_(30.0f)
 {
 }
 
 void phtm::Camera::Update(Message &message)
 {
   DirectX::XMFLOAT3 focusPoint = message.player_->GetPosition();
-  focusPoint.y += 30.0f;
+  focusPoint.y += 26.0f;
   Input *input = message.input_;
-  theta_ = message.player_->GetForwareRotation() + DirectX::XMConvertToRadians(-90.0f);
+  // forward rotation = 0.0 means no rotation is applied to the model
+  // when theta_ = radian(-90.0f), camera is at the negtive axis of z
+  theta_ = message.player_->GetForwardRotation() + DirectX::XMConvertToRadians(-90.0f);
   phi_ += message.deltaTimeInSeconds_ * input->RightVerticalAxis();
   if (phi_ > 2.5f)
   {
@@ -21,7 +23,7 @@ void phtm::Camera::Update(Message &message)
   }
   else if (phi_ > 1.5f)
   {
-    radius_ = 10.0f + 30.0f * (2.5f - phi_);
+    radius_ = 10.0f + 20.0f * (2.5f - phi_);
   }
   else if (phi_ < 0.5f)
   {

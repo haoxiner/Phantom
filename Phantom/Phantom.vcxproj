@@ -160,10 +160,13 @@
     <ClCompile Include="MovementSystem.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
+    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentCollection.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
@@ -179,8 +182,8 @@
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="RenderingComponent.h" />
     <ClInclude Include="RenderingSystem.h" />
-    <ClInclude Include="Shader.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>

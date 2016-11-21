@@ -24,10 +24,11 @@ void phtm::Player::Update(Message &message)
   {
     movementComponent_->rotation_ = DirectX::XMScalarModAngle(input->LeftAxis() + forwardRotation_);
     movementComponent_->rotateSpeed_ = DirectX::XMConvertToRadians(360.0f);
-    movementComponent_->moveSpeed_ = 10.0f;
+    movementComponent_->moveSpeed_ = 50.0f;
   }
   else
   {
     movementComponent_->rotateSpeed_ = 0.0f;
+    movementComponent_->moveSpeed_ = 0.0f;
   }
 }

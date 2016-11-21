@@ -1,9 +1,10 @@
 #pragma once
+#include "Component.h"
 #include <DirectXMath.h>
 
 namespace phtm
 {
-class MovementComponent
+class MovementComponent : public Component
 {
 public:
   DirectX::XMFLOAT3 position_;

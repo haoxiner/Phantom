@@ -14,20 +14,37 @@ bool phtm::MovementSystem::Initialize()
 
 void phtm::MovementSystem::Update(Message &message)
 {
-  auto &movementComponent = message.componentCollection_->movementComponents_[0];
-  float deltaAngle = DirectX::XMScalarModAngle(movementComponent.rotation_ - movementComponent.instantRotation_);
-  float rotateAngle = movementComponent.rotateSpeed_ * message.deltaTimeInSeconds_;
-
-  if (std::fabsf(deltaAngle) < std::fabsf(rotateAngle))
+  for (auto &movementComponent : message.componentCollection_->movementComponents_)
   {
-    rotateAngle = deltaAngle;
+    if (!movementComponent.IsActive())
+    {
+      continue;
+    }
+    float deltaAngle = DirectX::XMScalarModAngle(movementComponent.rotation_ - movementComponent.instantRotation_);
+    float rotateAngle = movementComponent.rotateSpeed_ * message.deltaTimeInSeconds_;
+    if (std::fabsf(deltaAngle) < std::fabsf(rotateAngle))
+    {
+      rotateAngle = deltaAngle;
+    }
+    else if (deltaAngle < 0.0f)
+    {
+      rotateAngle = -rotateAngle;
+    }
+    movementComponent.instantRotation_ += rotateAngle;
+    movementComponent.instantRotation_ = DirectX::XMScalarModAngle(movementComponent.instantRotation_);
+    if (std::fabsf(rotateAngle) < 0.01f)
+    {
+      DirectX::XMFLOAT4 direction(0.0f, 0.0f, 1.0f, 1.0f);
+      auto simdDirection = DirectX::XMLoadFloat4(&direction);
+      auto simdRotationMat = DirectX::XMMatrixRotationY(-movementComponent.instantRotation_);
+      simdDirection = DirectX::XMVector4Transform(simdDirection, simdRotationMat);
+      simdDirection = DirectX::XMVector3Normalize(simdDirection);
+      simdDirection = DirectX::XMVectorScale(simdDirection, movementComponent.moveSpeed_ * message.deltaTimeInSeconds_);
+      auto simdPosition = DirectX::XMLoadFloat3(&movementComponent.position_);
+      simdPosition = DirectX::XMVectorAdd(simdPosition, simdDirection);
+      DirectX::XMStoreFloat3(&movementComponent.position_, simdPosition);
+    }
   }
-  else if (deltaAngle < 0.0f)
-  {
-    rotateAngle = -rotateAngle;
-  }
-  movementComponent.instantRotation_ += rotateAngle;
-  movementComponent.instantRotation_ = DirectX::XMScalarModAngle(movementComponent.instantRotation_);
 }
 
 void phtm::MovementSystem::CleanUp()

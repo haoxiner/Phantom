@@ -8,7 +8,7 @@ static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPC
 
 phtm::RenderingSystem::RenderingSystem(Graphics *graphics, int screenWidth, int screenHeight)
   :graphics_(graphics)
-{  
+{
   float verticalFOV = 0.5f*3.141592654f;
   float aspectRatio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
   auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(
@@ -53,48 +53,44 @@ bool phtm::RenderingSystem::Initialize()
   if (FAILED(hr))
     return false;
   constantBuffers_.push_back(cbChangeEveryFrame);
-
-  /*simpleRenderer_.Initialize(
-    vertexShaders_.back(),
-    inputLayouts_.back(),
-    pixelShaders_.back(),
-    cbChangeOnResize,
-    cbChangeEveryFrame);*/
-
   return true;
 }
 
 void phtm::RenderingSystem::Update(Message &message)
 {
-  auto &renderingComponent = message.componentCollection_->renderingComponents_[0];
-  auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
-  auto rotate = DirectX::XMMatrixRotationY(-*renderingComponent.rotation_);
-  auto translate = DirectX::XMMatrixTranslation(
-    renderingComponent.position_->x,
-    renderingComponent.position_->y,
-    renderingComponent.position_->z);
-  
-  auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
-  modelMatrix = DirectX::XMMatrixMultiply(modelMatrix, translate);
-  DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
-
   message.camera_->Update(message);
   changeEveryFrame.view_ = message.camera_->view_;
   auto d3dContext = graphics_->GetD3DDeviceContext();
   D3D11_MAPPED_SUBRESOURCE mappedResource;
   //ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+  
+  for (auto &renderingComponent : message.componentCollection_->renderingComponents_)
+  {
+    if (!renderingComponent.IsActive())
+    {
+      continue;
+    }
+    auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
+    auto rotate = DirectX::XMMatrixRotationY(-*renderingComponent.rotation_);
+    auto translate = DirectX::XMMatrixTranslation(
+      renderingComponent.position_->x,
+      renderingComponent.position_->y,
+      renderingComponent.position_->z);
+    auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
+    modelMatrix = DirectX::XMMatrixMultiply(modelMatrix, translate);
+    DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
 
-  //	Disable GPU access to the vertex buffer data.
-  d3dContext->Map(constantBuffers_.back(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-  //	Update the vertex buffer here.
-  memcpy(mappedResource.pData, &changeEveryFrame, sizeof(ChangeEveryFrame));
-  //	Reenable GPU access to the vertex buffer data.
-  d3dContext->Unmap(constantBuffers_.back(), 0);
-
-  SimpleRender(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
+    //	Disable GPU access to the vertex buffer data.
+    d3dContext->Map(constantBuffers_.back(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    //	Update the vertex buffer here.
+    memcpy(mappedResource.pData, &changeEveryFrame, sizeof(ChangeEveryFrame));
+    //	Reenable GPU access to the vertex buffer data.
+    d3dContext->Unmap(constantBuffers_.back(), 0);
+    SimpleRender(graphics_->GetD3DDeviceContext(), renderingComponent.rawModel_, *(message.camera_));
+  }
 }
 
-void phtm::RenderingSystem::SimpleRender(ID3D11DeviceContext * context, RawModel & rawModel, Camera & camera)
+void phtm::RenderingSystem::SimpleRender(ID3D11DeviceContext *context, RawModel &rawModel, Camera &camera)
 {
   context->IASetInputLayout(inputLayouts_[0]);
   UINT stride1 = sizeof(Vertex);

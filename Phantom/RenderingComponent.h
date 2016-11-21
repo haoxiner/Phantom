@@ -1,10 +1,11 @@
 #pragma once
 #include "RawModel.h"
+#include "Component.h"
 #include <DirectXMath.h>
 
 namespace phtm
 {
-class RenderingComponent
+class RenderingComponent : public Component
 {
 public:
   RawModel rawModel_;
