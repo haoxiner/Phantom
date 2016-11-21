@@ -1,5 +1,6 @@
 #include "RenderingSystem.h"
 #include "Vertex.h"
+#include "Camera.h"
 #include "ComponentCollection.h"
 #include <d3dcompiler.h>
 
@@ -66,12 +67,12 @@ bool phtm::RenderingSystem::Initialize()
     return false;
   constantBuffers_.push_back(cbChangeEveryFrame);
 
-  simpleRenderer_.Initialize(
+  /*simpleRenderer_.Initialize(
     vertexShaders_.back(),
     inputLayouts_.back(),
     pixelShaders_.back(),
     cbChangeOnResize,
-    cbChangeEveryFrame);
+    cbChangeEveryFrame);*/
 
   return true;
 }
@@ -80,7 +81,7 @@ void phtm::RenderingSystem::Update(Message &message)
 {
   auto &renderingComponent = message.componentCollection_->renderingComponents_[0];
   auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
-  auto rotate = DirectX::XMMatrixRotationY(*renderingComponent.rotation_);
+  auto rotate = DirectX::XMMatrixRotationY(-*renderingComponent.rotation_);
   auto translate = DirectX::XMMatrixTranslation(
     renderingComponent.position_->x,
     renderingComponent.position_->y,
@@ -89,6 +90,9 @@ void phtm::RenderingSystem::Update(Message &message)
   auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
   modelMatrix = DirectX::XMMatrixMultiply(modelMatrix, translate);
   DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
+
+  message.camera_->Update(message);
+  changeEveryFrame.view_ = message.camera_->view_;
   auto d3dContext = graphics_->GetD3DDeviceContext();
   D3D11_MAPPED_SUBRESOURCE mappedResource;
   //ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -100,7 +104,23 @@ void phtm::RenderingSystem::Update(Message &message)
   //	Reenable GPU access to the vertex buffer data.
   d3dContext->Unmap(constantBuffers_.back(), 0);
 
-  simpleRenderer_.Render(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
+  SimpleRender(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
+  //simpleRenderer_.Render(graphics_->GetD3DDeviceContext(), message.componentCollection_->renderingComponents_[0].rawModel_, *(message.camera_));
+}
+
+void phtm::RenderingSystem::SimpleRender(ID3D11DeviceContext * context, RawModel & rawModel, Camera & camera)
+{
+  context->IASetInputLayout(inputLayouts_[0]);
+  UINT stride1 = sizeof(Vertex);
+  UINT offset1 = 0;
+  context->IASetVertexBuffers(0, 1, &rawModel.vertexBuffer_, &stride1, &offset1);
+  context->IASetIndexBuffer(rawModel.indexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+  context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  context->VSSetShader(vertexShaders_[0], nullptr, 0);
+  context->PSSetShader(pixelShaders_[0], nullptr, 0);
+  context->VSSetConstantBuffers(0, 1, &constantBuffers_[0]);
+  context->VSSetConstantBuffers(1, 1, &constantBuffers_[1]);
+  context->DrawIndexed(rawModel.indexCount_, 0, 0);
 }
 
 void phtm::RenderingSystem::CleanUp()

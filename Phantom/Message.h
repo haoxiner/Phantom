@@ -4,6 +4,7 @@ namespace phtm
 {
 class Input;
 class Camera;
+class Player;
 class ComponentCollection;
 class Message
 {
@@ -14,6 +15,7 @@ public:
   ComponentCollection *componentCollection_;
   Input *input_;
   Camera *camera_;
+  Player *player_;
 private:
 };
 }

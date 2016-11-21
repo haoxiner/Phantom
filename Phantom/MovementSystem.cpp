@@ -15,18 +15,10 @@ bool phtm::MovementSystem::Initialize()
 void phtm::MovementSystem::Update(Message &message)
 {
   auto &movementComponent = message.componentCollection_->movementComponents_[0];
-  float deltaAngle = movementComponent.rotation_ - movementComponent.instantRotation_;
+  float deltaAngle = DirectX::XMScalarModAngle(movementComponent.rotation_ - movementComponent.instantRotation_);
   float rotateAngle = movementComponent.rotateSpeed_ * message.deltaTimeInSeconds_;
 
-  if (deltaAngle < -3.14f)
-  {
-    deltaAngle = 2.0f * 3.14f - deltaAngle;
-  }
-  else if (deltaAngle > 3.14f)
-  {
-    deltaAngle -= 2.0f * 3.14f;
-  }
-  if (std::fabsf(deltaAngle) < rotateAngle)
+  if (std::fabsf(deltaAngle) < std::fabsf(rotateAngle))
   {
     rotateAngle = deltaAngle;
   }
@@ -35,16 +27,7 @@ void phtm::MovementSystem::Update(Message &message)
     rotateAngle = -rotateAngle;
   }
   movementComponent.instantRotation_ += rotateAngle;
-
-  // the rotation angle must be in [0, 2*PI)
-  if (movementComponent.instantRotation_ < 0.0f)
-  {
-    movementComponent.instantRotation_ += 2.0f * 3.14f;
-  }
-  else if (movementComponent.instantRotation_ > 2.0f * 3.14f)
-  {
-    movementComponent.instantRotation_ -= 2.0f * 3.14f;
-  }
+  movementComponent.instantRotation_ = DirectX::XMScalarModAngle(movementComponent.instantRotation_);
 }
 
 void phtm::MovementSystem::CleanUp()

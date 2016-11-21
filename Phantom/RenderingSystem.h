@@ -1,7 +1,7 @@
 #pragma once
 #include "System.h"
 #include "Graphics.h"
-#include "SimpleRenderer.h"
+#include "RawModel.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>
@@ -31,13 +31,13 @@ public:
 private:
   bool CreateSimpleVertexShader(ID3D11Device *d3dDevice);
   bool CreateSimplePixelShader(ID3D11Device *d3dDevice);
+  void SimpleRender(ID3D11DeviceContext *context, RawModel &rawModel, Camera &camera);
   Graphics *graphics_;
-  SimpleRenderer simpleRenderer_;
+  //SimpleRenderer simpleRenderer_;
   std::vector<ID3D11VertexShader*> vertexShaders_;
   std::vector<ID3D11PixelShader*> pixelShaders_;
   std::vector<ID3D11InputLayout*> inputLayouts_;
   std::vector<ID3D11Buffer*> constantBuffers_;
-
 private:
   ChangeOnResize changeOnResize;
   ChangeEveryFrame changeEveryFrame;

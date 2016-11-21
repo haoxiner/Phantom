@@ -1,5 +1,6 @@
 #include "Input.h"
 #include <dinput.h>
+#include <DirectXMath.h>
 
 phtm::Input::Input()
 {
@@ -46,9 +47,9 @@ float phtm::Input::LeftVerticalAxis()
 #define M_2_SQRTPI    1.12837916709551257390
 static float table[3][3] =
 {
-  M_PI*1.75f, M_PI*0.0f, M_PI*0.25f,
-  M_PI*1.50f,     -1.0f, M_PI*0.50f,
-  M_PI*1.25f, M_PI*1.0f, M_PI*0.75f
+  M_PI*0.25f, M_PI*0.0f, M_PI*-0.25f,
+  M_PI*0.50f,   -500.0f, M_PI*-0.50f,
+  M_PI*0.75f, M_PI*1.0f, M_PI*-0.75f
 };
 float phtm::Input::LeftAxis()
 {

@@ -67,6 +67,7 @@ void phtm::Game::StartGame()
   message_.componentCollection_ = &componentCollection_;
   message_.input_ = &(inputHandler_.input_);
   message_.camera_ = &camera_;
+  message_.player_ = player_;
 
   engine_.AddSystem(renderingSystem_);
   engine_.AddSystem(movementSystem_);

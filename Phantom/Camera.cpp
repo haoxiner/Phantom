@@ -4,16 +4,30 @@
 #include "Input.h"
 
 phtm::Camera::Camera()
-  :player_(nullptr), distance_(30.0f),
-  roll_(0.0f), pitch_(0), yaw_(0.0f)
+  :theta_(0.0f), phi_(0.45f * 3.14f), radius_(50.0f)
 {
 }
 
 void phtm::Camera::Update(Message &message)
 {
-  DirectX::XMFLOAT3 focusPoint = player_->GetPosition();
-  focusPoint.y += 14.0f;
+  DirectX::XMFLOAT3 focusPoint = message.player_->GetPosition();
+  focusPoint.y += 25.0f;
   Input *input = message.input_;
-  yaw_ += input->RightHorizontalAxis();
-  pitch_ += input->RightVerticalAxis();
+  theta_ = message.player_->GetForwareRotation() + DirectX::XMConvertToRadians(-90.0f);
+  phi_ += message.deltaTimeInSeconds_ * input->RightVerticalAxis();
+
+  float sinPhiMuliplyRadius = radius_ * DirectX::XMScalarSin(phi_);
+  DirectX::XMFLOAT3 position = {
+    sinPhiMuliplyRadius * DirectX::XMScalarCos(theta_),
+    radius_ * DirectX::XMScalarCos(phi_),
+    sinPhiMuliplyRadius * DirectX::XMScalarSin(theta_)
+  };
+
+  auto simdPosition = DirectX::XMLoadFloat3(&position);
+  auto simdFocusPoint = DirectX::XMLoadFloat3(&focusPoint);
+  simdPosition = DirectX::XMVectorAdd(simdPosition, simdFocusPoint);
+  auto up = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+  auto simdUp = DirectX::XMLoadFloat3(&up);
+  DirectX::XMStoreFloat4x4(&view_, DirectX::XMMatrixLookAtLH(simdPosition, simdFocusPoint, simdUp));
+
 }
