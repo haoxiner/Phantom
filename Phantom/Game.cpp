@@ -4,8 +4,6 @@
 #include <fstream>
 
 phtm::Game::Game()
-  :renderingSystem_(nullptr),
-  player_(nullptr)
 {
 }
 
@@ -15,8 +13,7 @@ phtm::Game::~Game()
 
 void phtm::Game::StartGame()
 {
-  renderingSystem_ = new RenderingSystem(&graphics_, screenWidth_, screenHeight_);
-  movementSystem_ = new MovementSystem();
+  renderingSystem_.Initialize(&graphics_, screenWidth_, screenHeight_);
   resourceLoader_.Initialize(&graphics_);
 
   resourceLoader_.LoadRMD(componentCollection_.renderingComponents_[0].rawModel_, "D:/GameDev/Resources/knight.rmd");
@@ -26,7 +23,7 @@ void phtm::Game::StartGame()
   componentCollection_.movementComponents_[0].position_ = DirectX::XMFLOAT3(400, 0, 400);
   componentCollection_.renderingComponents_[0].position_ = &componentCollection_.movementComponents_[0].position_;
   componentCollection_.renderingComponents_[0].rotation_ = &componentCollection_.movementComponents_[0].instantRotation_;
-  player_ = new Player(&componentCollection_.movementComponents_[0],&componentCollection_.renderingComponents_[0]);
+  player_.Initialize(&componentCollection_.movementComponents_[0],&componentCollection_.renderingComponents_[0]);
   
   // terrain
   componentCollection_.movementComponents_[1].SetActive(false);
@@ -45,12 +42,12 @@ void phtm::Game::StartGame()
   message_.componentCollection_ = &componentCollection_;
   message_.input_ = &(inputHandler_.input_);
   message_.camera_ = &camera_;
-  message_.player_ = player_;
+  message_.player_ = &player_;
 
-  engine_.AddSystem(movementSystem_);
-  engine_.AddSystem(renderingSystem_);
+  engine_.AddSystem(&movementSystem_);
+  engine_.AddSystem(&renderingSystem_);
   
-  engine_.AddEntity(player_);
+  engine_.AddEntity(&player_);
   if (!engine_.Start())
   {
     running_ = false;
@@ -77,5 +74,4 @@ void phtm::Game::UpdateGame(float deltaTimeInSeconds)
 void phtm::Game::EndGame()
 {
   engine_.Shutdown();
-  if (renderingSystem_) delete renderingSystem_;
 }

@@ -6,18 +6,19 @@
 
 static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob **ppBlobOut);
 
-phtm::RenderingSystem::RenderingSystem(Graphics *graphics, int screenWidth, int screenHeight)
-  :graphics_(graphics)
+phtm::RenderingSystem::RenderingSystem()
+{ 
+}
+
+bool phtm::RenderingSystem::Initialize(Graphics *graphics, int screenWidth, int screenHeight)
 {
+  graphics_ = graphics;
   float verticalFOV = 0.5f*3.141592654f;
   float aspectRatio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
   auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(
     verticalFOV, aspectRatio, 0.001f, 1000.0f);
   DirectX::XMStoreFloat4x4(&changeOnResize.projection_, projMatrix);
-}
 
-bool phtm::RenderingSystem::Initialize()
-{
   auto d3dDevice = graphics_->GetD3DDevice();
   bool success = CreateSimpleVertexShader(d3dDevice);
   if (!success)

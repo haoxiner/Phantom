@@ -23,9 +23,9 @@ public:
 class RenderingSystem : public System
 {
 public:
-  RenderingSystem(Graphics *graphics, int screenWidth, int screenHeight);
+  RenderingSystem();
   virtual ~RenderingSystem() {}
-  virtual bool Initialize();
+  bool Initialize(Graphics *graphics, int screenWidth, int screenHeight);
   virtual void Update(Message &message);
   virtual void CleanUp();
 private:

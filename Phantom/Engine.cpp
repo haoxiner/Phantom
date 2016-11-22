@@ -2,11 +2,6 @@
 
 bool phtm::Engine::Start()
 {
-  for (auto system : systems_)
-  {
-    if (!system->Initialize())
-      return false;
-  }
   return true;
 }
 

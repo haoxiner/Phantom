@@ -24,9 +24,9 @@ private:
   Message message_;
   Engine engine_;
   Camera camera_;
-  Player *player_;
-  RenderingSystem *renderingSystem_;
-  MovementSystem *movementSystem_;
+  Player player_;
+  RenderingSystem renderingSystem_;
+  MovementSystem movementSystem_;
   ComponentCollection componentCollection_;
   ResourceLoader resourceLoader_;
 };

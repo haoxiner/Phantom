@@ -8,11 +8,12 @@ namespace phtm
 class Player : public Entity
 {
 public:
-  Player(
-    MovementComponent *movementComponent,
-    RenderingComponent *renderingComponent);
+  Player();
   virtual ~Player() {}
   virtual void Update(Message &message);
+  void Initialize(
+    MovementComponent *movementComponent,
+    RenderingComponent *renderingComponent);
   float GetForwardRotation() { return forwardRotation_; }
   const DirectX::XMFLOAT3 &GetPosition() { return movementComponent_->position_; }
 private:
