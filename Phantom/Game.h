@@ -7,6 +7,7 @@
 #include "ComponentCollection.h"
 #include "Camera.h"
 #include "Player.h"
+#include "ResourceLoader.h"
 
 namespace phtm
 {
@@ -27,5 +28,6 @@ private:
   RenderingSystem *renderingSystem_;
   MovementSystem *movementSystem_;
   ComponentCollection componentCollection_;
+  ResourceLoader resourceLoader_;
 };
 }

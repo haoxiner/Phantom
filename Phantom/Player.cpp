@@ -23,8 +23,8 @@ void phtm::Player::Update(Message &message)
   if (!(input->LeftAxis() < -100.0f))
   {
     movementComponent_->rotation_ = DirectX::XMScalarModAngle(input->LeftAxis() + forwardRotation_);
-    movementComponent_->rotateSpeed_ = DirectX::XMConvertToRadians(360.0f);
-    movementComponent_->moveSpeed_ = 50.0f;
+    movementComponent_->rotateSpeed_ = DirectX::XMConvertToRadians(720.0f);
+    movementComponent_->moveSpeed_ = 100.0f;
   }
   else
   {

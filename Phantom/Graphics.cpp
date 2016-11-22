@@ -208,7 +208,7 @@ bool phtm::Graphics::InitializeSwapChain(HWND hWnd, int width, int height)
   sd.SampleDesc.Count = 1;
   sd.SampleDesc.Quality = 0;
   // Full Screen
-  sd.Windowed = TRUE;
+  sd.Windowed = FALSE;
   sd.Flags = 0;
   hr = dxgiFactory->CreateSwapChain(d3dDevice_, &sd, &swapChain_);
   // block the ALT+ENTER shortcut (switch between full screen and window)

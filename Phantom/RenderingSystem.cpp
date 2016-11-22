@@ -70,14 +70,12 @@ void phtm::RenderingSystem::Update(Message &message)
     {
       continue;
     }
-    auto scale = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f);
     auto rotate = DirectX::XMMatrixRotationY(-*renderingComponent.rotation_);
     auto translate = DirectX::XMMatrixTranslation(
       renderingComponent.position_->x,
       renderingComponent.position_->y,
       renderingComponent.position_->z);
-    auto modelMatrix = DirectX::XMMatrixMultiply(scale, rotate);
-    modelMatrix = DirectX::XMMatrixMultiply(modelMatrix, translate);
+    auto modelMatrix = DirectX::XMMatrixMultiply(rotate, translate);
     DirectX::XMStoreFloat4x4(&changeEveryFrame.modelToWorld, modelMatrix);
 
     //	Disable GPU access to the vertex buffer data.

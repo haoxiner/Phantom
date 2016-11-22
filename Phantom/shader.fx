@@ -57,6 +57,6 @@ float4 PS(VS_OUT pin):SV_Target
   float SpecularLighting = exp(-K*(1-DotNH));
   //SpecularLighting = pow(DotNH, K);
   float intensity = SpecularLighting * 0.5 + diff * 0.5;
-  float4 color = pow(float4(intensity,intensity,intensity, 1.0f), 1.0/1.0);
+  float4 color = pow(float4(intensity,intensity,intensity, 1.0f), 1.0/2.2);
   return color;
 }
