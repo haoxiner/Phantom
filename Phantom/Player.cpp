@@ -10,14 +10,14 @@ phtm::Player::Player()
 void phtm::Player::Update(Message &message)
 {
   Input *input = message.input_;
-  forwardRotation_ -= message.deltaTimeInSeconds_ * input->RightHorizontalAxis();
+  forwardRotation_ -= DirectX::XMConvertToRadians(180.0f) * message.deltaTimeInSeconds_ * input->RightHorizontalAxis();
   forwardRotation_ = DirectX::XMScalarModAngle(forwardRotation_);
   
   if (!(input->LeftAxis() < -100.0f))
   {
     movementComponent_->rotation_ = DirectX::XMScalarModAngle(input->LeftAxis() + forwardRotation_);
     movementComponent_->rotateSpeed_ = DirectX::XMConvertToRadians(720.0f);
-    movementComponent_->moveSpeed_ = 100.0f;
+    movementComponent_->moveSpeed_ = 10.0f;
   }
   else
   {

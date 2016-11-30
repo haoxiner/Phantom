@@ -50,6 +50,7 @@ void phtm::ResourceLoader::LoadRawModel(
   const std::vector<Vertex> &vertices,
   const std::vector<int> &indices)
 {
+  rawModel.indexCount_ = indices.size();
   auto d3dDevice = graphics_->GetD3DDevice();
   // submit to GPU
   D3D11_BUFFER_DESC bufferDesc;

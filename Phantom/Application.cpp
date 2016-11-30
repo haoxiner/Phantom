@@ -41,15 +41,12 @@ void phtm::Application::Run()
         endTick = startTick;
       }
       deltaTime = 0.001f * static_cast<float>(endTick - startTick);
-
-      /*
-      float timeCap = 1.0f / 60.0f;
-      if (deltaTime < timeCap)
-      {
-        Sleep(static_cast<unsigned long>(timeCap*1000 - deltaTime*1000));
-        deltaTime = timeCap;
-      }
-      */
+      //float timeCap = 1.0f / 60.0f;
+      //if (deltaTime < timeCap)
+      //{
+      //  Sleep(static_cast<unsigned long>(timeCap*1000 - deltaTime*1000));
+      //  deltaTime = timeCap;
+      //}
       frame++;
       elapsedTime += deltaTime;
       if (elapsedTime > 1.0f)
@@ -124,19 +121,21 @@ bool phtm::Application::InitializeWindow()
 
   screenWidth_ = GetSystemMetrics(SM_CXSCREEN);
   screenHeight_ = GetSystemMetrics(SM_CYSCREEN);
+  screenWidth_ = 800;
+  screenHeight_ = 600;
 
   // Full screen mode is implemented in DirectX, this block has been commented.
   // To Full Screen Mode
-  /*
-  DEVMODE dmScreenSettings;
-  memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-  dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-  dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
-  dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-  dmScreenSettings.dmBitsPerPel = 32;
-  dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-  ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-  */
+  
+  //DEVMODE dmScreenSettings;
+  //memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+  //dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+  //dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth_;
+  //dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight_;
+  //dmScreenSettings.dmBitsPerPel = 32;
+  //dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+  //ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+  
 
   int posX = 0, posY = 0;
 

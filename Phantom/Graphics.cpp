@@ -75,9 +75,11 @@ bool phtm::Graphics::Initialize(HWND hWnd)
   ZeroMemory(&rasterDesc, sizeof(rasterDesc));
   rasterDesc.AntialiasedLineEnable = false;
   rasterDesc.CullMode = D3D11_CULL_BACK;
+  //rasterDesc.CullMode = D3D11_CULL_NONE;
   rasterDesc.DepthBias = 0;
   rasterDesc.DepthBiasClamp = 0.0f;
   rasterDesc.DepthClipEnable = true;
+  //rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
   rasterDesc.FillMode = D3D11_FILL_SOLID;
   rasterDesc.FrontCounterClockwise = false;
   rasterDesc.MultisampleEnable = false;
@@ -199,8 +201,8 @@ bool phtm::Graphics::InitializeSwapChain(HWND hWnd, int width, int height)
   sd.BufferDesc.Width = width;
   sd.BufferDesc.Height = height;
   sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-  sd.BufferDesc.RefreshRate.Numerator = 60;
-  sd.BufferDesc.RefreshRate.Denominator = 1;
+  sd.BufferDesc.RefreshRate.Numerator = 0;
+  sd.BufferDesc.RefreshRate.Denominator = 0;
   sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
   sd.OutputWindow = hWnd;
   sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
@@ -208,7 +210,7 @@ bool phtm::Graphics::InitializeSwapChain(HWND hWnd, int width, int height)
   sd.SampleDesc.Count = 1;
   sd.SampleDesc.Quality = 0;
   // Full Screen
-  sd.Windowed = FALSE;
+  sd.Windowed = TRUE;
   sd.Flags = 0;
   hr = dxgiFactory->CreateSwapChain(d3dDevice_, &sd, &swapChain_);
   // block the ALT+ENTER shortcut (switch between full screen and window)

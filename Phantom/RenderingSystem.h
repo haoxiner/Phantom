@@ -33,7 +33,6 @@ private:
   bool CreateSimplePixelShader(ID3D11Device *d3dDevice);
   void SimpleRender(ID3D11DeviceContext *context, RawModel &rawModel, Camera &camera);
   Graphics *graphics_;
-  //SimpleRenderer simpleRenderer_;
   std::vector<ID3D11VertexShader*> vertexShaders_;
   std::vector<ID3D11PixelShader*> pixelShaders_;
   std::vector<ID3D11InputLayout*> inputLayouts_;

@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Player.h"
 #include "ResourceLoader.h"
+#include "GameScene.h"
 
 namespace phtm
 {
@@ -21,6 +22,7 @@ protected:
   virtual void UpdateGame(float deltaTimeInSeconds);
   virtual void EndGame();
 private:
+  GameScene gameScene_;
   Message message_;
   Engine engine_;
   Camera camera_;

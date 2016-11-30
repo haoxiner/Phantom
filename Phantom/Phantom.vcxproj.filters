@@ -78,6 +78,9 @@
     <ClCompile Include="ResourceLoader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="ResourceLoader.h">
       <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>头文件\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

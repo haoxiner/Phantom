@@ -1,4 +1,5 @@
 #include "Terrain.h"
+#include <DirectXMath.h>
 
 phtm::Terrain::Terrain(
   MovementComponent *movementComponent,
@@ -19,11 +20,11 @@ void phtm::Terrain::GenerateTerrain(
     {
       vertices.emplace_back(
         ((float)x) / (VERTEX_COUNT - 1) * SIZE,
-        0.0f,
+        0.0f,//0.3f*z*DirectX::XMScalarSin(0.1f*x) + 0.3f*x*DirectX::XMScalarCos(0.1f*z),
         ((float)z) / (VERTEX_COUNT - 1) * SIZE,
-        0.0f,
+        0.0f,//-0.03f*z*DirectX::XMScalarCos(0.1f*z) - 0.3f*DirectX::XMScalarCos(0.1f*z),
         1.0f,
-        0.0f,
+        0.0f,//-0.3f*z*DirectX::XMScalarSin(0.1f*x) + 0.03f*DirectX::XMScalarSin(0.1f*z),
         ((float)x) / (VERTEX_COUNT - 1),
         ((float)z) / (VERTEX_COUNT - 1),
         0.0f,0.0f,1.0f);

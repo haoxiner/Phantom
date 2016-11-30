@@ -12,8 +12,8 @@ public:
   // component together (interleaved)
   // 1. movable rendering component
   // 2. static rendering component
-  std::array<RenderingComponent, 20> renderingComponents_;
-  std::array<MovementComponent, 20> movementComponents_;
+  std::array<RenderingComponent, 2> renderingComponents_;
+  std::array<MovementComponent, 2> movementComponents_;
 private:
 
 };

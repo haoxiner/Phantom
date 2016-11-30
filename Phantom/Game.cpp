@@ -16,8 +16,8 @@ void phtm::Game::StartGame()
   renderingSystem_.Initialize(&graphics_, screenWidth_, screenHeight_);
   resourceLoader_.Initialize(&graphics_);
 
-  resourceLoader_.LoadRMD(componentCollection_.renderingComponents_[0].rawModel_, "D:/GameDev/Resources/knight.rmd");
   // player
+  resourceLoader_.LoadRMD(componentCollection_.renderingComponents_[0].rawModel_, "D:/GameDev/Resources/knight.rmd");
   componentCollection_.movementComponents_[0].SetActive(true);
   componentCollection_.renderingComponents_[0].SetActive(true);
   componentCollection_.movementComponents_[0].position_ = DirectX::XMFLOAT3(400, 0, 400);
@@ -26,18 +26,7 @@ void phtm::Game::StartGame()
   player_.Initialize(&componentCollection_.movementComponents_[0],&componentCollection_.renderingComponents_[0]);
   
   // terrain
-  componentCollection_.movementComponents_[1].SetActive(false);
-  componentCollection_.renderingComponents_[1].SetActive(true);
-  componentCollection_.movementComponents_[1].position_ = DirectX::XMFLOAT3(0, 0, 0);
-  componentCollection_.renderingComponents_[1].position_ = &componentCollection_.movementComponents_[1].position_;
-  componentCollection_.renderingComponents_[1].rotation_ = &componentCollection_.movementComponents_[1].instantRotation_;
-  //auto terrain = new Terrain(&componentCollection_.movementComponents_[1], &componentCollection_.renderingComponents_[1]);
-  std::vector<Vertex> terrainVertices;
-  std::vector<int> terrainIndices;
-  Terrain::GenerateTerrain(800, 256, terrainVertices, terrainIndices);
-  resourceLoader_.LoadRawModel(
-    componentCollection_.renderingComponents_[1].rawModel_,
-    terrainVertices, terrainIndices);
+  gameScene_.PrepareTerrain(componentCollection_, resourceLoader_);
 
   message_.componentCollection_ = &componentCollection_;
   message_.input_ = &(inputHandler_.input_);

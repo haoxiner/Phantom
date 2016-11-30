@@ -7,7 +7,7 @@
 static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob **ppBlobOut);
 
 phtm::RenderingSystem::RenderingSystem()
-{ 
+{
 }
 
 bool phtm::RenderingSystem::Initialize(Graphics *graphics, int screenWidth, int screenHeight)
@@ -50,7 +50,7 @@ bool phtm::RenderingSystem::Initialize(Graphics *graphics, int screenWidth, int 
   ZeroMemory(&initData, sizeof(initData));
   initData.pSysMem = &changeEveryFrame;
   hr = d3dDevice->CreateBuffer(&constBufferDesc, &initData, &cbChangeEveryFrame);
-  
+
   if (FAILED(hr))
     return false;
   constantBuffers_.push_back(cbChangeEveryFrame);
@@ -64,7 +64,7 @@ void phtm::RenderingSystem::Update(Message &message)
   auto d3dContext = graphics_->GetD3DDeviceContext();
   D3D11_MAPPED_SUBRESOURCE mappedResource;
   //ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-  
+
   for (auto &renderingComponent : message.componentCollection_->renderingComponents_)
   {
     if (!renderingComponent.IsActive())
