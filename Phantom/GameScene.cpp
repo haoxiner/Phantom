@@ -13,11 +13,8 @@ void phtm::GameScene::PrepareTerrain(
   //auto terrain = new Terrain(&componentCollection_.movementComponents_[1], &componentCollection_.renderingComponents_[1]);
   std::vector<Vertex> terrainVertices;
   std::vector<int> terrainIndices;
-  Terrain::GenerateTerrain(800, 256, terrainVertices, terrainIndices);
+  Terrain::GenerateTerrain(100, 64, terrainVertices, terrainIndices);
   resourceLoader.LoadRawModel(
     componentCollection.renderingComponents_[1].rawModel_,
     terrainVertices, terrainIndices);
-
-  //resourceLoader.LoadRMD(componentCollection.renderingComponents_[1].rawModel_, "D:/GameDev/Resources/knight.rmd");
-
 }
