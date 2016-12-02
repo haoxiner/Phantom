@@ -84,6 +84,12 @@
     <ClCompile Include="DeferredBuffers.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredRenderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -156,6 +162,12 @@
       <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="DeferredBuffers.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRenderer.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderUtil.h">
       <Filter>头文件\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

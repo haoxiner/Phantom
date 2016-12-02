@@ -151,6 +151,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="DeferredBuffers.cpp" />
+    <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="ShaderUtil.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
@@ -172,6 +174,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentCollection.h" />
     <ClInclude Include="DeferredBuffers.h" />
+    <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="RenderingComponent.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="ShaderUtil.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Vertex.h" />

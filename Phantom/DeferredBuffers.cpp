@@ -20,16 +20,12 @@ bool DeferredBuffers::Initialize(
   int textureWidth, int textureHeight,
   float screenDepth, float screenNear)
 {
-  D3D11_TEXTURE2D_DESC textureDesc;
+  
   HRESULT result;
-  D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-  D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-  D3D11_TEXTURE2D_DESC depthTextureDesc;
-  D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-
   width_ = textureWidth;
   height_ = textureHeight;
 
+  D3D11_TEXTURE2D_DESC textureDesc;
   ZeroMemory(&textureDesc, sizeof(textureDesc));
   textureDesc.Width = width_;
   textureDesc.Height = height_;
@@ -42,7 +38,6 @@ bool DeferredBuffers::Initialize(
   textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
   textureDesc.CPUAccessFlags = 0;
   textureDesc.MiscFlags = 0;
-
   for (int i = 0; i < BUFFER_COUNT; i++)
   {
     result = d3dDevice->CreateTexture2D(&textureDesc, nullptr, &textures_[i]);
@@ -52,6 +47,7 @@ bool DeferredBuffers::Initialize(
     }
   }
 
+  D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
   renderTargetViewDesc.Format = textureDesc.Format;
   renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
   renderTargetViewDesc.Texture2D.MipSlice = 0;
@@ -64,6 +60,7 @@ bool DeferredBuffers::Initialize(
     }
   }
 
+  D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
   shaderResourceViewDesc.Format = textureDesc.Format;
   shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
   shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
@@ -77,6 +74,7 @@ bool DeferredBuffers::Initialize(
     }
   }
 
+  D3D11_TEXTURE2D_DESC depthTextureDesc;
   depthTextureDesc.Width = width_;
   depthTextureDesc.Height = height_;
   depthTextureDesc.MipLevels = 1;
@@ -93,6 +91,17 @@ bool DeferredBuffers::Initialize(
   {
     return false;
   }
+  
+  D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+  depthStencilViewDesc.Format = depthTextureDesc.Format;
+  depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+  depthStencilViewDesc.Texture2D.MipSlice = 0;
+  result = d3dDevice->CreateDepthStencilView(depthStencilTexture_, &depthStencilViewDesc, &depthStencilView_);
+  if (FAILED(result))
+  {
+    return false;
+  }
+
   viewport_.Width = static_cast<float>(width_);
   viewport_.Height = static_cast<float>(height_);
   viewport_.MinDepth = 0.0f;

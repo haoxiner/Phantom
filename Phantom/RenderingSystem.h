@@ -2,6 +2,7 @@
 #include "System.h"
 #include "Graphics.h"
 #include "RawModel.h"
+#include "DeferredBuffers.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>
@@ -40,5 +41,7 @@ private:
 private:
   ChangeOnResize changeOnResize;
   ChangeEveryFrame changeEveryFrame;
+
+  DeferredBuffers deferredBuffers_;
 };
 }
