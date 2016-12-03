@@ -9,26 +9,31 @@ class DeferredRenderer
 public:
   DeferredRenderer();
   ~DeferredRenderer();
-  bool Initialize(ID3D11Device *device);
+  bool Initialize(ID3D11Device *device, float aspectRatio);
   void Render(ID3D11DeviceContext *context);
 private:
   bool InitializeShader(ID3D11Device *device);
-  bool InitializeConstantBuffer(ID3D11Device *device);
+  bool InitializeConstantBuffer(ID3D11Device *device, float aspectRatio);
   ID3D11VertexShader *vertexShader_;
   ID3D11PixelShader *pixelShader_;
   ID3D11InputLayout *vertexLayout_;
-  ID3D11Buffer *cbChangeOnResize_;
-  ID3D11Buffer *cbChangeFrequently_;
-  class ChangeOnResize
+  ID3D11Buffer *cbImmutable_;
+  ID3D11Buffer *cbPerFrame_;
+  ID3D11Buffer *cbPerObject_;
+  class ImmutableBuffer
   {
   public:
     DirectX::XMFLOAT4X4 projection_;
   };
-  class ChangeFrequently
+  class PerFrameBuffer
+  {
+  public:
+    DirectX::XMFLOAT4X4 worldToView_;
+  };
+  class PerObjectBuffer
   {
   public:
     DirectX::XMFLOAT4X4 modelToWorld_;
-    DirectX::XMFLOAT4X4 worldToView_;
   };
 };
 }

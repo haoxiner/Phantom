@@ -9,13 +9,13 @@ phtm::DeferredRenderer::~DeferredRenderer()
 {
 }
 
-bool phtm::DeferredRenderer::Initialize(ID3D11Device *device)
+bool phtm::DeferredRenderer::Initialize(ID3D11Device *device, float aspectRatio)
 {
   if (!InitializeShader(device))
   {
     return false;
   }
-  if (!InitializeConstantBuffer(device))
+  if (!InitializeConstantBuffer(device, aspectRatio))
   {
     return false;
   }
@@ -88,32 +88,43 @@ bool phtm::DeferredRenderer::InitializeShader(ID3D11Device *device)
   return true;
 }
 
-bool phtm::DeferredRenderer::InitializeConstantBuffer(ID3D11Device *device)
+bool phtm::DeferredRenderer::InitializeConstantBuffer(ID3D11Device *device, float aspectRatio)
 {
-  ChangeOnResize changeOnResize;
-  ZeroMemory(&changeOnResize, sizeof(ChangeOnResize));
+  ImmutableBuffer immutableBuffer;
   // changeOnResize constant buffer
   D3D11_BUFFER_DESC constBufferDesc;
   ZeroMemory(&constBufferDesc, sizeof(constBufferDesc));
-  constBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-  constBufferDesc.ByteWidth = sizeof(ChangeOnResize);
+  constBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+  constBufferDesc.ByteWidth = sizeof(immutableBuffer);
   constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  //D3D11_SUBRESOURCE_DATA initData;
-  //ZeroMemory(&initData, sizeof(initData));
-  //initData.pSysMem = &changeOnResize;
-  auto result = device->CreateBuffer(&constBufferDesc, nullptr, &cbChangeOnResize_);
+  float verticalFOV = 0.5f*3.141592654f;
+  auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(
+    verticalFOV, aspectRatio, 0.001f, 1000.0f);
+  DirectX::XMStoreFloat4x4(&immutableBuffer.projection_, projMatrix);
+  D3D11_SUBRESOURCE_DATA initData;
+  ZeroMemory(&initData, sizeof(initData));
+  initData.pSysMem = &immutableBuffer;
+  auto result = device->CreateBuffer(&constBufferDesc, nullptr, &cbImmutable_);
   if (FAILED(result))
   {
     return false;
   }
 
-  ChangeFrequently changeFrequently;
+  PerFrameBuffer perFrameBuffer;
   ZeroMemory(&constBufferDesc, sizeof(constBufferDesc));
   constBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
   constBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-  constBufferDesc.ByteWidth = sizeof(ChangeFrequently);
+  constBufferDesc.ByteWidth = sizeof(perFrameBuffer);
   constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  result = device->CreateBuffer(&constBufferDesc, nullptr, &cbChangeFrequently_);
+  result = device->CreateBuffer(&constBufferDesc, nullptr, &cbPerFrame_);
+  if (FAILED(result))
+  {
+    return false;
+  }
+
+  PerObjectBuffer perObjectBuffer;
+  constBufferDesc.ByteWidth = sizeof(perObjectBuffer);
+  result = device->CreateBuffer(&constBufferDesc, nullptr, &cbPerObject_);
   if (FAILED(result))
   {
     return false;

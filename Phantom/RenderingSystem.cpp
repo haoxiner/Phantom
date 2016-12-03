@@ -61,6 +61,12 @@ void phtm::RenderingSystem::Update(Message &message)
   changeEveryFrame.view_ = message.camera_->view_;
   auto d3dContext = graphics_->GetD3DDeviceContext();
   D3D11_MAPPED_SUBRESOURCE mappedResource;
+  //	Disable GPU access to the vertex buffer data.
+  //d3dContext->Map(constantBuffers_.back(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+  //	Update the vertex buffer here.
+  //ChangeEveryFrame *cbPerFrame = (ChangeEveryFrame*)mappedResource.pData;
+  //cbPerFrame->view_ = message.camera_->view_;
+  //d3dContext->Unmap(constantBuffers_.back(), 0);
   //ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
   for (auto &renderingComponent : message.componentCollection_->renderingComponents_)
@@ -79,9 +85,10 @@ void phtm::RenderingSystem::Update(Message &message)
 
     //	Disable GPU access to the vertex buffer data.
     d3dContext->Map(constantBuffers_.back(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    //	Update the vertex buffer here.
     memcpy(mappedResource.pData, &changeEveryFrame, sizeof(ChangeEveryFrame));
-    //	Reenable GPU access to the vertex buffer data.
+    //ChangeEveryFrame *cbPerFrame = (ChangeEveryFrame*)mappedResource.pData;
+    //cbPerFrame->view_ = message.camera_->view_;
+    //cbPerFrame->modelToWorld = changeEveryFrame.modelToWorld;
     d3dContext->Unmap(constantBuffers_.back(), 0);
     SimpleRender(graphics_->GetD3DDeviceContext(), renderingComponent.rawModel_, *(message.camera_));
   }
