@@ -1,9 +1,10 @@
-cbuffer cbChangeOnResize : register(b0)
+
+cbuffer cbChangeOnResize
 {
   float4x4 projection;
 };
 
-cbuffer cbChangeEveryFrame : register(b1)
+cbuffer cbChangeEveryFrame
 {
   float4x4 modelToWorld;
   float4x4 view;
@@ -11,16 +12,16 @@ cbuffer cbChangeEveryFrame : register(b1)
 
 struct VS_IN
 {
-  float3 position:POSITION;
-  float3 normal:NORMAL;
-  float2 texCoord:TEXCOORD;
+  float3 position:POSITION0;
+  float3 normal:NORMAL0;
+  float2 texCoord:TEXCOORD0;
 };
 struct VS_OUT
 {
   float4 position:SV_POSITION;
-  float4 posInCameraSpace:POSITION;
-  float4 normal:NORMAL;
-  float2 texCoord:TEXCOORD;
+  float4 posInCameraSpace:POSITION0;
+  float4 normal:NORMAL0;
+  float2 texCoord:TEXCOORD0;
 };
 
 #define LN2DIV8               0.08664
@@ -44,8 +45,14 @@ VS_OUT VS(
   vout.texCoord = vin.texCoord;
   return vout;
 }
-
-float4 PS(VS_OUT pin):SV_Target
+struct PS_IN
+{
+  float4 position:SV_POSITION;
+  float4 posInCameraSpace:POSITION0;
+  float4 normal:NORMAL0;
+  float2 texCoord:TEXCOORD0;
+};
+float4 PS(PS_IN pin):SV_Target
 {
   float4 n = normalize(pin.normal);
   float4 lightDir = normalize(float4(1.0f,1.0f,-1.0f,0.0f));
