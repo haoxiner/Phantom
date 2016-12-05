@@ -75,7 +75,7 @@ void phtm::RenderingSystem::Update(Message &message)
     {
       continue;
     }
-    auto rotate = DirectX::XMMatrixRotationY(-*renderingComponent.rotation_);
+    auto rotate = DirectX::XMMatrixRotationZ(-*renderingComponent.rotation_);
     auto translate = DirectX::XMMatrixTranslation(
       renderingComponent.position_->x,
       renderingComponent.position_->y,

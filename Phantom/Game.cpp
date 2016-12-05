@@ -17,10 +17,10 @@ void phtm::Game::StartGame()
   resourceLoader_.Initialize(&graphics_);
 
   // player
-  resourceLoader_.LoadRMD(componentCollection_.renderingComponents_[0].rawModel_, "D:/GameDev/Resources/knight.rmd");
+  resourceLoader_.LoadRMD(componentCollection_.renderingComponents_[0].rawModel_, "D:/GameDev/Resources/proto.rmd");
   componentCollection_.movementComponents_[0].SetActive(true);
   componentCollection_.renderingComponents_[0].SetActive(true);
-  componentCollection_.movementComponents_[0].position_ = DirectX::XMFLOAT3(50, 0, 50);
+  componentCollection_.movementComponents_[0].position_ = DirectX::XMFLOAT3(50, 50, 0);
   componentCollection_.renderingComponents_[0].position_ = &componentCollection_.movementComponents_[0].position_;
   componentCollection_.renderingComponents_[0].rotation_ = &componentCollection_.movementComponents_[0].instantRotation_;
   player_.Initialize(&componentCollection_.movementComponents_[0],&componentCollection_.renderingComponents_[0]);

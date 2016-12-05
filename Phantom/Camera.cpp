@@ -11,7 +11,7 @@ phtm::Camera::Camera()
 void phtm::Camera::Update(Message &message)
 {
   DirectX::XMFLOAT3 focusPoint = message.player_->GetPosition();
-  focusPoint.y += 1.5f;
+  focusPoint.z += 1.5f;
   Input *input = message.input_;
   // forward rotation = 0.0 means no rotation is applied to the model
   // when theta_ = radian(-90.0f), camera is at the negtive axis of z
@@ -32,15 +32,15 @@ void phtm::Camera::Update(Message &message)
 
   float sinPhiMuliplyRadius = radius_ * DirectX::XMScalarSin(phi_);
   DirectX::XMFLOAT3 position = {
-    sinPhiMuliplyRadius * DirectX::XMScalarCos(theta_),
-    radius_ * DirectX::XMScalarCos(phi_),
-    sinPhiMuliplyRadius * DirectX::XMScalarSin(theta_)
+    sinPhiMuliplyRadius * DirectX::XMScalarCos(-theta_),
+    sinPhiMuliplyRadius * DirectX::XMScalarSin(-theta_),
+    radius_ * DirectX::XMScalarCos(phi_)
   };
 
   auto simdPosition = DirectX::XMLoadFloat3(&position);
   auto simdFocusPoint = DirectX::XMLoadFloat3(&focusPoint);
   simdPosition = DirectX::XMVectorAdd(simdPosition, simdFocusPoint);
-  auto up = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+  auto up = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
   auto simdUp = DirectX::XMLoadFloat3(&up);
   DirectX::XMStoreFloat4x4(&view_, DirectX::XMMatrixLookAtLH(simdPosition, simdFocusPoint, simdUp));
 

@@ -1,6 +1,7 @@
 #include "DeferredBuffers.h"
+#include "Release.h"
 
-DeferredBuffers::DeferredBuffers()
+phtm::DeferredBuffers::DeferredBuffers()
   :depthStencilView_(nullptr), depthStencilTexture_(nullptr)
 {
   for (int i = 0; i < BUFFER_COUNT; i++)
@@ -11,11 +12,11 @@ DeferredBuffers::DeferredBuffers()
   }
 }
 
-DeferredBuffers::~DeferredBuffers()
+phtm::DeferredBuffers::~DeferredBuffers()
 {
 }
 
-bool DeferredBuffers::Initialize(
+bool phtm::DeferredBuffers::Initialize(
   ID3D11Device *d3dDevice,
   int textureWidth, int textureHeight,
   float screenDepth, float screenNear)
@@ -111,34 +112,19 @@ bool DeferredBuffers::Initialize(
   return true;
 }
 
-void DeferredBuffers::Shutdown()
+void phtm::DeferredBuffers::Shutdown()
 {
-  if (depthStencilView_)
-  {
-    depthStencilView_->Release();
-  }
-  if (depthStencilTexture_)
-  {
-    depthStencilTexture_->Release();
-  }
+  Release(depthStencilView_);
+  Release(depthStencilTexture_);
   for (int i = 0; i < BUFFER_COUNT; i++)
   {
-    if (textures_[i])
-    {
-      textures_[i]->Release();
-    }
-    if (renderTargetViews_[i])
-    {
-      renderTargetViews_[i]->Release();
-    }
-    if (shaderResourceViews_[i])
-    {
-      shaderResourceViews_[i]->Release();
-    }
+    Release(renderTargetViews_[i]);
+    Release(shaderResourceViews_[i]);
+    Release(textures_[i]);
   }
 }
 
-void DeferredBuffers::SetRenderTargets(ID3D11DeviceContext *deviceContext)
+void phtm::DeferredBuffers::SetRenderTargets(ID3D11DeviceContext *deviceContext)
 {
   deviceContext->OMSetRenderTargets(BUFFER_COUNT, renderTargetViews_, depthStencilView_);
   deviceContext->RSSetViewports(1, &viewport_);

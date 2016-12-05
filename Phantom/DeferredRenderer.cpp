@@ -1,7 +1,11 @@
 #include "DeferredRenderer.h"
 #include "ShaderUtil.h"
+#include "Release.h"
 
 phtm::DeferredRenderer::DeferredRenderer()
+  :vertexShader_(nullptr), pixelShader_(nullptr),
+  vertexLayout_(nullptr), cbImmutable_(nullptr),
+  cbPerFrame_(nullptr), cbPerObject_(nullptr)
 {
 }
 
@@ -22,8 +26,12 @@ bool phtm::DeferredRenderer::Initialize(ID3D11Device *device, float aspectRatio)
   return true;
 }
 
-void phtm::DeferredRenderer::Render(ID3D11DeviceContext *context)
+void phtm::DeferredRenderer::Render(ID3D11DeviceContext *deviceContext)
 {
+  deviceContext->IASetInputLayout(vertexLayout_);
+  deviceContext->VSSetShader(vertexShader_, nullptr, 0);
+  deviceContext->PSSetShader(pixelShader_, nullptr, 0);
+
 }
 
 bool phtm::DeferredRenderer::InitializeShader(ID3D11Device *device)
@@ -90,13 +98,32 @@ bool phtm::DeferredRenderer::InitializeShader(ID3D11Device *device)
 
 bool phtm::DeferredRenderer::InitializeConstantBuffer(ID3D11Device *device, float aspectRatio)
 {
-  ImmutableBuffer immutableBuffer;
-  // changeOnResize constant buffer
   D3D11_BUFFER_DESC constBufferDesc;
   ZeroMemory(&constBufferDesc, sizeof(constBufferDesc));
+  constBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+  constBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+  constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+  PerObjectBuffer perObjectBuffer;
+  constBufferDesc.ByteWidth = sizeof(perObjectBuffer);
+  auto result = device->CreateBuffer(&constBufferDesc, nullptr, &cbPerObject_);
+  if (FAILED(result))
+  {
+    return false;
+  }
+
+  PerFrameBuffer perFrameBuffer;
+  constBufferDesc.ByteWidth = sizeof(perFrameBuffer);
+  result = device->CreateBuffer(&constBufferDesc, nullptr, &cbPerFrame_);
+  if (FAILED(result))
+  {
+    return false;
+  }
+
+  ImmutableBuffer immutableBuffer;
   constBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
   constBufferDesc.ByteWidth = sizeof(immutableBuffer);
-  constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  constBufferDesc.CPUAccessFlags = 0;
   float verticalFOV = 0.5f*3.141592654f;
   auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(
     verticalFOV, aspectRatio, 0.001f, 1000.0f);
@@ -104,31 +131,21 @@ bool phtm::DeferredRenderer::InitializeConstantBuffer(ID3D11Device *device, floa
   D3D11_SUBRESOURCE_DATA initData;
   ZeroMemory(&initData, sizeof(initData));
   initData.pSysMem = &immutableBuffer;
-  auto result = device->CreateBuffer(&constBufferDesc, nullptr, &cbImmutable_);
-  if (FAILED(result))
-  {
-    return false;
-  }
-
-  PerFrameBuffer perFrameBuffer;
-  ZeroMemory(&constBufferDesc, sizeof(constBufferDesc));
-  constBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-  constBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-  constBufferDesc.ByteWidth = sizeof(perFrameBuffer);
-  constBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  result = device->CreateBuffer(&constBufferDesc, nullptr, &cbPerFrame_);
-  if (FAILED(result))
-  {
-    return false;
-  }
-
-  PerObjectBuffer perObjectBuffer;
-  constBufferDesc.ByteWidth = sizeof(perObjectBuffer);
-  result = device->CreateBuffer(&constBufferDesc, nullptr, &cbPerObject_);
+  result = device->CreateBuffer(&constBufferDesc, nullptr, &cbImmutable_);
   if (FAILED(result))
   {
     return false;
   }
 
   return true;
+}
+
+void phtm::DeferredRenderer::Shutdown()
+{
+  Release(vertexShader_);
+  Release(pixelShader_);
+  Release(vertexLayout_);
+  Release(cbImmutable_);
+  Release(cbPerFrame_);
+  Release(cbPerObject_);
 }

@@ -34,9 +34,9 @@ void phtm::MovementSystem::Update(Message &message)
     movementComponent.instantRotation_ = DirectX::XMScalarModAngle(movementComponent.instantRotation_);
     if (std::fabsf(rotateAngle) < 0.01f)
     {
-      DirectX::XMFLOAT4 direction(0.0f, 0.0f, 1.0f, 1.0f);
+      DirectX::XMFLOAT4 direction(0.0f, -1.0f, 0.0f, 1.0f);
       auto simdDirection = DirectX::XMLoadFloat4(&direction);
-      auto simdRotationMat = DirectX::XMMatrixRotationY(-movementComponent.instantRotation_);
+      auto simdRotationMat = DirectX::XMMatrixRotationZ(-movementComponent.instantRotation_);
       simdDirection = DirectX::XMVector4Transform(simdDirection, simdRotationMat);
       simdDirection = DirectX::XMVector3Normalize(simdDirection);
       simdDirection = DirectX::XMVectorScale(simdDirection, movementComponent.moveSpeed_ * message.deltaTimeInSeconds_);

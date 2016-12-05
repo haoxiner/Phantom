@@ -16,34 +16,36 @@ void phtm::Terrain::GenerateTerrain(
 {
   for (int x = 0; x < VERTEX_COUNT; x++)
   {
-    for (int z = 0; z < VERTEX_COUNT; z++)
+    for (int y = 0; y < VERTEX_COUNT; y++)
     {
       vertices.emplace_back(
         ((float)x) / (VERTEX_COUNT - 1) * SIZE,
-        0.0f,//0.3f*z*DirectX::XMScalarSin(0.1f*x) + 0.3f*x*DirectX::XMScalarCos(0.1f*z),
-        ((float)z) / (VERTEX_COUNT - 1) * SIZE,
-        0.0f,//-0.03f*z*DirectX::XMScalarCos(0.1f*z) - 0.3f*DirectX::XMScalarCos(0.1f*z),
-        1.0f,
-        0.0f,//-0.3f*z*DirectX::XMScalarSin(0.1f*x) + 0.03f*DirectX::XMScalarSin(0.1f*z),
+        ((float)y) / (VERTEX_COUNT - 1) * SIZE,
+        0.0f,//0.3f*y*DirectX::XMScalarSin(0.1f*x) + 0.3f*x*DirectX::XMScalarCos(0.1f*y),
+        0.0f,//-0.03f*y*DirectX::XMScalarCos(0.1f*y) - 0.3f*DirectX::XMScalarCos(0.1f*y),
+        0.0f,
+        1.0f,//-0.3f*y*DirectX::XMScalarSin(0.1f*x) + 0.03f*DirectX::XMScalarSin(0.1f*y),
         ((float)x) / (VERTEX_COUNT - 1),
-        ((float)z) / (VERTEX_COUNT - 1),
+        ((float)y) / (VERTEX_COUNT - 1),
         0.0f,0.0f,1.0f);
     }
   }
   for (int x = 0; x < VERTEX_COUNT - 1; x++)
   {
-    for (int z = 0; z < VERTEX_COUNT - 1; z++)
+    for (int y = 0; y < VERTEX_COUNT - 1; y++)
     {
-      int bottomLeft = x * VERTEX_COUNT + z;
-      int bottomRight = bottomLeft + 1;
-      int topLeft = (x + 1) * VERTEX_COUNT + z;
-      int topRight = topLeft + 1;
-      indices.push_back(bottomLeft);
-      indices.push_back(topRight);
+      int topLeft = x * VERTEX_COUNT + y;
+      int bottomLeft = topLeft + 1;
+      int topRight = (x + 1) * VERTEX_COUNT + y;
+      int bottomRight = topRight + 1;
+      
       indices.push_back(topLeft);
-      indices.push_back(bottomLeft);
-      indices.push_back(bottomRight);
       indices.push_back(topRight);
+      indices.push_back(bottomLeft);
+
+      indices.push_back(bottomLeft);
+      indices.push_back(topRight);
+      indices.push_back(bottomRight);
     }
   }
 }

@@ -10,10 +10,11 @@ public:
   DeferredRenderer();
   ~DeferredRenderer();
   bool Initialize(ID3D11Device *device, float aspectRatio);
-  void Render(ID3D11DeviceContext *context);
+  void Render(ID3D11DeviceContext *deviceContext);
 private:
   bool InitializeShader(ID3D11Device *device);
   bool InitializeConstantBuffer(ID3D11Device *device, float aspectRatio);
+  void Shutdown();
   ID3D11VertexShader *vertexShader_;
   ID3D11PixelShader *pixelShader_;
   ID3D11InputLayout *vertexLayout_;

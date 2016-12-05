@@ -1,5 +1,7 @@
 #pragma once
 #include <d3d11.h>
+namespace phtm
+{
 class DeferredBuffers
 {
 public:
@@ -22,3 +24,4 @@ private:
   ID3D11DepthStencilView *depthStencilView_;
   D3D11_VIEWPORT viewport_;
 };
+}
